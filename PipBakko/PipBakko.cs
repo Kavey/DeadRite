@@ -59,7 +59,6 @@ namespace PipKaan
         private const float ERange = 4.8f;
         private const float RRange = 2.5f;
         private const float EX1Range = 2.5f;
-        private const float FRange = 4.5f;
         private const float F_M1Range = 2.5f;
         private const float F_M2Range = 9.6f;
 		private const float FRange = 9f;
