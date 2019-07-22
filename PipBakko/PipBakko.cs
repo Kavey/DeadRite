@@ -61,7 +61,7 @@ namespace PipKaan
         private const float EX1Range = 2.5f;
         private const float F_M1Range = 2.5f;
         private const float F_M2Range = 9.6f;
-		private const float FRange = 9f;
+		private const float FRange = 6f;
 
         private static bool EvadeExists => EvadeHandler.EvadeExists;
         private static bool IsREvading => EvadeHandler.RuhKaanR.IsEvading;
