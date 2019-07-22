@@ -1,0 +1,15 @@
+C:\Users\skaaz\Desktop\PipBakko\bin\Release\PipKaan.dll
+C:\Users\skaaz\Desktop\PipBakko\bin\Release\PipKaan.pdb
+C:\Users\skaaz\Desktop\PipBakko\obj\Release\PipKaan.dll
+C:\Users\skaaz\Desktop\PipBakko\obj\Release\PipKaan.pdb
+C:\Users\skaaz\Desktop\PipBakko\obj\Release\PipBakko.csprojResolveAssemblyReference.cache
+C:\Users\skaaz\Desktop\1BR\PipBakko\bin\Release\PipBakko.dll
+C:\Users\skaaz\Desktop\1BR\PipBakko\bin\Release\PipBakko.pdb
+C:\Users\skaaz\Desktop\1BR\PipBakko\obj\Release\PipBakko.csprojResolveAssemblyReference.cache
+C:\Users\skaaz\Desktop\1BR\PipBakko\obj\Release\PipBakko.dll
+C:\Users\skaaz\Desktop\1BR\PipBakko\obj\Release\PipBakko.pdb
+C:\Users\Shadow\Desktop\BRiteProfiles\PipBakko\bin\Release\PipBakko.dll
+C:\Users\Shadow\Desktop\BRiteProfiles\PipBakko\bin\Release\PipBakko.pdb
+C:\Users\Shadow\Desktop\BRiteProfiles\PipBakko\obj\Release\PipBakko.csprojResolveAssemblyReference.cache
+C:\Users\Shadow\Desktop\BRiteProfiles\PipBakko\obj\Release\PipBakko.dll
+C:\Users\Shadow\Desktop\BRiteProfiles\PipBakko\obj\Release\PipBakko.pdb

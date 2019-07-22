@@ -1,0 +1,5 @@
+C:\Users\skaaz\Desktop\1BR\PipSirius\bin\Release\PipSirius.dll
+C:\Users\skaaz\Desktop\1BR\PipSirius\bin\Release\PipSirius.pdb
+C:\Users\skaaz\Desktop\1BR\PipSirius\obj\Release\PipSirius.dll
+C:\Users\skaaz\Desktop\1BR\PipSirius\obj\Release\PipSirius.pdb
+C:\Users\skaaz\Desktop\1BR\PipSirius\obj\Release\PipSirius.csprojResolveAssemblyReference.cache

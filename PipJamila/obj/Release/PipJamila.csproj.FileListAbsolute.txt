@@ -1,0 +1,5 @@
+C:\Users\skaaz\Desktop\1BR\PipJamila\bin\Release\PipJamila.dll
+C:\Users\skaaz\Desktop\1BR\PipJamila\bin\Release\PipJamila.pdb
+C:\Users\skaaz\Desktop\1BR\PipJamila\obj\Release\PipJamila.csprojResolveAssemblyReference.cache
+C:\Users\skaaz\Desktop\1BR\PipJamila\obj\Release\PipJamila.dll
+C:\Users\skaaz\Desktop\1BR\PipJamila\obj\Release\PipJamila.pdb

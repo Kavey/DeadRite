@@ -1,0 +1,5 @@
+C:\Users\skaaz\Desktop\1BR\PipLucie\bin\Release\PipLucie.dll
+C:\Users\skaaz\Desktop\1BR\PipLucie\bin\Release\PipLucie.pdb
+C:\Users\skaaz\Desktop\1BR\PipLucie\obj\Release\PipLucie.dll
+C:\Users\skaaz\Desktop\1BR\PipLucie\obj\Release\PipLucie.pdb
+C:\Users\skaaz\Desktop\1BR\PipLucie\obj\Release\PipLucie.csprojResolveAssemblyReference.cache

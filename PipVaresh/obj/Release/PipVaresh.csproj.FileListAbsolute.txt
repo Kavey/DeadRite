@@ -1,0 +1,5 @@
+C:\Users\skaaz\Desktop\PipVaresh\bin\Release\PipAshka.dll
+C:\Users\skaaz\Desktop\PipVaresh\bin\Release\PipAshka.pdb
+C:\Users\skaaz\Desktop\PipVaresh\obj\Release\PipAshka.dll
+C:\Users\skaaz\Desktop\PipVaresh\obj\Release\PipAshka.pdb
+C:\Users\skaaz\Desktop\PipVaresh\obj\Release\PipVaresh.csprojResolveAssemblyReference.cache

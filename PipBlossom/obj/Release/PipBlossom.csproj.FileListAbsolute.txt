@@ -1,0 +1,5 @@
+C:\Users\skaaz\Desktop\1BR\PipBlossom\bin\Release\PipBlossom.dll
+C:\Users\skaaz\Desktop\1BR\PipBlossom\bin\Release\PipBlossom.pdb
+C:\Users\skaaz\Desktop\1BR\PipBlossom\obj\Release\PipBlossom.csprojResolveAssemblyReference.cache
+C:\Users\skaaz\Desktop\1BR\PipBlossom\obj\Release\PipBlossom.dll
+C:\Users\skaaz\Desktop\1BR\PipBlossom\obj\Release\PipBlossom.pdb

@@ -1,0 +1,5 @@
+C:\Users\skaaz\Desktop\PipBakko\bin\Release\PipKaan.dll
+C:\Users\skaaz\Desktop\PipBakko\bin\Release\PipKaan.pdb
+C:\Users\skaaz\Desktop\PipBakko\obj\Release\PipKaan.dll
+C:\Users\skaaz\Desktop\PipBakko\obj\Release\PipKaan.pdb
+C:\Users\skaaz\Desktop\PipBakko\obj\Release\PipBakko.csprojResolveAssemblyReference.cache

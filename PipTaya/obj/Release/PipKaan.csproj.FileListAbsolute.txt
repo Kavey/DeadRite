@@ -1,0 +1,10 @@
+C:\Users\skaaz\AppData\Roaming\LkoIsHmkN0dkdRAyjKp9OVKCuDXcCofjsIMHB5gP2Xg\MJr8Ux3NV7IkMtV5QOq4KVuQoDrNWL9Zl5tcU7RfM\1413F18\PipKaan\bin\Release\PipKaan.dll
+C:\Users\skaaz\AppData\Roaming\LkoIsHmkN0dkdRAyjKp9OVKCuDXcCofjsIMHB5gP2Xg\MJr8Ux3NV7IkMtV5QOq4KVuQoDrNWL9Zl5tcU7RfM\1413F18\PipKaan\bin\Release\PipKaan.pdb
+C:\Users\skaaz\AppData\Roaming\LkoIsHmkN0dkdRAyjKp9OVKCuDXcCofjsIMHB5gP2Xg\MJr8Ux3NV7IkMtV5QOq4KVuQoDrNWL9Zl5tcU7RfM\1413F18\PipKaan\obj\Release\PipKaan.dll
+C:\Users\skaaz\AppData\Roaming\LkoIsHmkN0dkdRAyjKp9OVKCuDXcCofjsIMHB5gP2Xg\MJr8Ux3NV7IkMtV5QOq4KVuQoDrNWL9Zl5tcU7RfM\1413F18\PipKaan\obj\Release\PipKaan.pdb
+C:\Users\skaaz\AppData\Roaming\LkoIsHmkN0dkdRAyjKp9OVKCuDXcCofjsIMHB5gP2Xg\MJr8Ux3NV7IkMtV5QOq4KVuQoDrNWL9Zl5tcU7RfM\1413F18\PipKaan\obj\Release\PipKaan.csprojResolveAssemblyReference.cache
+C:\Users\skaaz\Desktop\PipBakko\bin\Release\PipKaan.dll
+C:\Users\skaaz\Desktop\PipBakko\bin\Release\PipKaan.pdb
+C:\Users\skaaz\Desktop\PipBakko\obj\Release\PipKaan.csprojResolveAssemblyReference.cache
+C:\Users\skaaz\Desktop\PipBakko\obj\Release\PipKaan.dll
+C:\Users\skaaz\Desktop\PipBakko\obj\Release\PipKaan.pdb

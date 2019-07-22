@@ -1,0 +1,10 @@
+C:\Users\skaaz\Desktop\PipFreya\obj\Release\PipFreya.csprojResolveAssemblyReference.cache
+C:\Users\skaaz\Desktop\PipFreya\bin\Release\PipFreya.dll
+C:\Users\skaaz\Desktop\PipFreya\bin\Release\PipFreya.pdb
+C:\Users\skaaz\Desktop\PipFreya\obj\Release\PipFreya.dll
+C:\Users\skaaz\Desktop\PipFreya\obj\Release\PipFreya.pdb
+C:\Users\skaaz\Desktop\1BR\PipFreya\bin\Release\PipFreya.dll
+C:\Users\skaaz\Desktop\1BR\PipFreya\bin\Release\PipFreya.pdb
+C:\Users\skaaz\Desktop\1BR\PipFreya\obj\Release\PipFreya.csprojResolveAssemblyReference.cache
+C:\Users\skaaz\Desktop\1BR\PipFreya\obj\Release\PipFreya.dll
+C:\Users\skaaz\Desktop\1BR\PipFreya\obj\Release\PipFreya.pdb

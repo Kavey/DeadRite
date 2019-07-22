@@ -1,0 +1,5 @@
+C:\Users\skaaz\AppData\Roaming\LkoIsHmkN0dkdRAyjKp9OVKCuDXcCofjsIMHB5gP2Xg\MJr8Ux3NV7IkMtV5QOq4KVuQoDrNWL9Zl5tcU7RfM\29B973E\PipLucie\bin\Release\PipLucie.dll
+C:\Users\skaaz\AppData\Roaming\LkoIsHmkN0dkdRAyjKp9OVKCuDXcCofjsIMHB5gP2Xg\MJr8Ux3NV7IkMtV5QOq4KVuQoDrNWL9Zl5tcU7RfM\29B973E\PipLucie\bin\Release\PipLucie.pdb
+C:\Users\skaaz\AppData\Roaming\LkoIsHmkN0dkdRAyjKp9OVKCuDXcCofjsIMHB5gP2Xg\MJr8Ux3NV7IkMtV5QOq4KVuQoDrNWL9Zl5tcU7RfM\29B973E\PipLucie\obj\Release\PipLucie.csprojResolveAssemblyReference.cache
+C:\Users\skaaz\AppData\Roaming\LkoIsHmkN0dkdRAyjKp9OVKCuDXcCofjsIMHB5gP2Xg\MJr8Ux3NV7IkMtV5QOq4KVuQoDrNWL9Zl5tcU7RfM\29B973E\PipLucie\obj\Release\PipLucie.dll
+C:\Users\skaaz\AppData\Roaming\LkoIsHmkN0dkdRAyjKp9OVKCuDXcCofjsIMHB5gP2Xg\MJr8Ux3NV7IkMtV5QOq4KVuQoDrNWL9Zl5tcU7RfM\29B973E\PipLucie\obj\Release\PipLucie.pdb

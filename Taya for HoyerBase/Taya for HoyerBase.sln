@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.421
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Taya for HoyerBase", "Taya for HoyerBase.csproj", "{D255BD13-8CD5-4AB5-9553-E7890AC486B9}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D255BD13-8CD5-4AB5-9553-E7890AC486B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D255BD13-8CD5-4AB5-9553-E7890AC486B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D255BD13-8CD5-4AB5-9553-E7890AC486B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D255BD13-8CD5-4AB5-9553-E7890AC486B9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6FB88809-B0A1-41DA-A7CF-C27C7A7CFF88}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,13 @@
+C:\Users\skaaz\AppData\Roaming\LkoIsHmkN0dkdRAyjKp9OVKCuDXcCofjsIMHB5gP2Xg\MJr8Ux3NV7IkMtV5QOq4KVuQoDrNWL9Zl5tcU7RfM\1A3425B\HoyerVaresh\bin\Release\HoyerVaresh.dll
+C:\Users\skaaz\AppData\Roaming\LkoIsHmkN0dkdRAyjKp9OVKCuDXcCofjsIMHB5gP2Xg\MJr8Ux3NV7IkMtV5QOq4KVuQoDrNWL9Zl5tcU7RfM\1A3425B\HoyerVaresh\bin\Release\HoyerVaresh.pdb
+C:\Users\skaaz\AppData\Roaming\LkoIsHmkN0dkdRAyjKp9OVKCuDXcCofjsIMHB5gP2Xg\MJr8Ux3NV7IkMtV5QOq4KVuQoDrNWL9Zl5tcU7RfM\1A3425B\HoyerVaresh\obj\Release\HoyerVaresh.csprojResolveAssemblyReference.cache
+C:\Users\skaaz\AppData\Roaming\LkoIsHmkN0dkdRAyjKp9OVKCuDXcCofjsIMHB5gP2Xg\MJr8Ux3NV7IkMtV5QOq4KVuQoDrNWL9Zl5tcU7RfM\1A3425B\HoyerVaresh\obj\Release\HoyerVaresh.dll
+C:\Users\skaaz\AppData\Roaming\LkoIsHmkN0dkdRAyjKp9OVKCuDXcCofjsIMHB5gP2Xg\MJr8Ux3NV7IkMtV5QOq4KVuQoDrNWL9Zl5tcU7RfM\1A3425B\HoyerVaresh\obj\Release\HoyerVaresh.pdb
+C:\Users\skaaz\Desktop\HoyerVaresh\bin\Release\HoyerVaresh.dll
+C:\Users\skaaz\Desktop\HoyerVaresh\bin\Release\HoyerVaresh.pdb
+C:\Users\skaaz\Desktop\HoyerVaresh\obj\Release\HoyerVaresh.csprojResolveAssemblyReference.cache
+C:\Users\skaaz\Desktop\HoyerVaresh\obj\Release\HoyerVaresh.dll
+C:\Users\skaaz\Desktop\HoyerVaresh\obj\Release\HoyerVaresh.pdb
+C:\Users\skaaz\Desktop\1BR\HoyerVareshNoCancel\obj\Release\HoyerVaresh.csprojResolveAssemblyReference.cache
+C:\Users\skaaz\Desktop\1BR\HoyerVareshNoCancel\obj\Release\HoyerVaresh.dll
+C:\Users\skaaz\Desktop\1BR\HoyerVareshNoCancel\obj\Release\HoyerVaresh.pdb
