@@ -43,14 +43,14 @@ namespace PipKaan
         private const float ESpeed = 9.6f;
         private const float RAirTime = 0.8f;
         private const float F_M2Speed = 23.5f;
-	private const float FSpeed = 10f;
+		private const float FSpeed = 10f;
 
         private const float M2Radius = 0.35f;
         private const float SpaceRadius = 2f;
         private const float ERadius = 0.6f;
         private const float RRadius = 1.8f;
         private const float F_M2Radius = 0.35f;
-	private const float FRadius = 0.6f;
+		private const float FRadius = 0.6f;
 
         private const float M1Range = 2.5f;
         private const float M2Range = 9.3f;
@@ -61,11 +61,7 @@ namespace PipKaan
         private const float EX1Range = 2.5f;
         private const float F_M1Range = 2.5f;
         private const float F_M2Range = 9.6f;
-<<<<<<< HEAD
 		private const float FRange = 6f;
-=======
-	private const float FRange = 9f;
->>>>>>> 7679e3bf4cf739bbda0a13be9b4475b58778faa5
 
         private static bool EvadeExists => EvadeHandler.EvadeExists;
         private static bool IsREvading => EvadeHandler.RuhKaanR.IsEvading;
