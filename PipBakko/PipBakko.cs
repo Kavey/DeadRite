@@ -670,7 +670,7 @@ namespace PipKaan
             ComboMenu.Add(new MenuCheckBox("combo.useR.evade", "Use R (Nether Void) to evade (needs HoyerEvade)", false));
             ComboMenu.Add(new MenuCheckBox("combo.useEX1", "Use EX1 (Reaping Scythe)", false));
             ComboMenu.Add(new MenuIntSlider("combo.useEX1.minEnergyBars", "    ^ Min energy bars", 3, 4, 1));
-            ComboMenu.Add(new MenuCheckBox("combo.useF", "Use F (Shadow Beast) when there's an enemy in range", false));
+            ComboMenu.Add(new MenuCheckBox("combo.useF", "Use F (Shadow Beast) when there's an enemy in range", true));
 
             ComboMenu.AddSeparator(10f);
             ComboMenu.AddLabel("While in Ultimate (Shadow Beast) Mode");
