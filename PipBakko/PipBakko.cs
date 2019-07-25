@@ -43,7 +43,7 @@ namespace PipKaan
         private const float ESpeed = 9.6f;
         private const float RAirTime = 0.8f;
         private const float F_M2Speed = 23.5f;
-		private const float FSpeed = 10f;
+		private const float FSpeed = 8.5f;
 
         private const float M2Radius = 0.35f;
         private const float SpaceRadius = 2f;
@@ -62,7 +62,6 @@ namespace PipKaan
         private const float F_M1Range = 2.5f;
         private const float F_M2Range = 9.6f;
 		private const float FRange = 6f;
-		private const float EMinRange = 2f;
 
         private static bool EvadeExists => EvadeHandler.EvadeExists;
         private static bool IsREvading => EvadeHandler.RuhKaanR.IsEvading;
@@ -665,7 +664,7 @@ namespace PipKaan
             ComboMenu.Add(new MenuCheckBox("combo.useSpace", "Use Space (Sinister Strike)", false));
             ComboMenu.Add(new MenuCheckBox("combo.useQ", "Use Q (Consume) to reset Right-Mouse", false));
             ComboMenu.Add(new MenuCheckBox("combo.useE", "Use E (Claw of the wicked)", true));
-            ComboMenu.Add(new MenuSlider("combo.useE.minRange", "    ^ Minimum range", EMinRange, ERange - 1f, 0f));
+            ComboMenu.Add(new MenuSlider("combo.useE.minRange", "    ^ Minimum range", 2f, ERange - 1f, 0f));
             ComboMenu.Add(new MenuCheckBox("combo.useR", "Use R (Nether Void) if ennemy in melee range", true));
             ComboMenu.Add(new MenuIntSlider("combo.useR.minEnergyBars", "    ^ Min energy bars", 1, 4, 1));
             ComboMenu.Add(new MenuCheckBox("combo.useR.evade", "Use R (Nether Void) to evade (needs HoyerEvade)", false));
