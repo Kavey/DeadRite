@@ -13,3 +13,8 @@ C:\Users\Shadow\Desktop\BRiteProfiles\PipBakko\bin\Release\PipBakko.pdb
 C:\Users\Shadow\Desktop\BRiteProfiles\PipBakko\obj\Release\PipBakko.csprojResolveAssemblyReference.cache
 C:\Users\Shadow\Desktop\BRiteProfiles\PipBakko\obj\Release\PipBakko.dll
 C:\Users\Shadow\Desktop\BRiteProfiles\PipBakko\obj\Release\PipBakko.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipBakko\bin\Release\PipBakko.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipBakko\bin\Release\PipBakko.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipBakko\obj\Release\PipBakko.csprojResolveAssemblyReference.cache
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipBakko\obj\Release\PipBakko.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipBakko\obj\Release\PipBakko.pdb

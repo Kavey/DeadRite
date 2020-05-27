@@ -1,0 +1,5 @@
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVRook\bin\Release\KVRook.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVRook\bin\Release\KVRook.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVRook\obj\Release\KVRook.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVRook\obj\Release\KVRook.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVRook\obj\Release\KVRook.csprojResolveAssemblyReference.cache

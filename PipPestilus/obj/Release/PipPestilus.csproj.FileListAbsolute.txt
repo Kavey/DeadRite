@@ -1,0 +1,5 @@
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipPestilus\bin\Release\PipPestilus.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipPestilus\bin\Release\PipPestilus.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipPestilus\obj\Release\PipPestilus.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipPestilus\obj\Release\PipPestilus.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipPestilus\obj\Release\PipPestilus.csprojResolveAssemblyReference.cache

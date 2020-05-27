@@ -1,0 +1,16 @@
+Name: Impale
+Range: 1.500001
+Duration: 0.1489868
+Speed: 10.06801
+
+Champion = "Shifu",
+ObjectName = "Javelin",
+AbilitySlot = AbilitySlot.Ability5,
+AbilityId = 467552288,
+AbilityType = AbilityType.LineProjectile,
+Range = 8.5f,
+Radius = 0.35f,
+Speed = 21.5f,
+Danger = 3,
+
+KunjuMeleeAttackBuff

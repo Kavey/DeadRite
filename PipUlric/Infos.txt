@@ -1,0 +1,23 @@
+Space Range : 6
+
+Favor : Lightbringer
+
+Charged weapon:
+LucieHero.IsWeaponCharged
+
+RMB: Smite
+
+Name: SmiteProjectile (RMB)
+Range: 8.5
+Radius: 0.3
+Speed: 21.5
+
+Name: LawBringerProjectile (R)
+Range: 6
+Radius: 0.45
+Speed: 21.5
+
+Name: DivineShieldProjectile (F)
+Range: 9
+Radius: 0.3
+Speed: 24

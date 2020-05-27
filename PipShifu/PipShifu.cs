@@ -7,10 +7,7 @@ using BattleRight.Core;
 using BattleRight.Core.Models;
 using BattleRight.Core.Enumeration;
 using BattleRight.Core.GameObjects;
-using BattleRight.Core.GameObjects.Models;
 using BattleRight.Core.Math;
-
-using BattleRight.Helper;
 
 using BattleRight.SDK;
 using BattleRight.SDK.Enumeration;
@@ -26,70 +23,45 @@ using PipLibrary.Utils;
 
 using TestPrediction2NS;
 
-namespace PipKaan
+namespace PipShifu
 {
-    public class PipKaan : IAddon
+    public class PipShifu : IAddon
     {
-        private const bool _debugMode = false;
+        private static Menu LucieMenu;
+        private static Menu KeysMenu, ComboMenu, HealMenu, DrawingsMenu;
 
-        private static Menu KaanMenu;
-        private static Menu KeysMenu, ComboMenu, HealMenu, DrawMenu, DebugMenu;
-
-        private static Character KaanHero => LocalPlayer.Instance; 
+        private static Character LucieHero => LocalPlayer.Instance;
         private static readonly string HeroName = "Shifu";
-
-        private const float M2Speed = 9.5f;
-        private const float SpaceAirTime = 0.3f;
-        private const float ESpeed = 21.2f;
-        private const float RAirTime = 0.8f;
-        private const float F_M2Speed = 23.5f;
-
-        private const float M2Radius = 0.35f;
-        private const float SpaceRadius = 2f;
-        private const float ERadius = 0.35f;
-        private const float RRadius = 1.8f;
-        private const float F_M2Radius = 0.35f;
-
-        private const float M1Range = 2.5f;
-        private const float M2Range = 3f;
-        private const float SpaceMinRange = 3f;
-        private const float SpaceMaxRange = 4.5f;
-        private const float ERange = 8.5f;
-        private const float RRange = 8f;
-        private const float EX1Range = 2.5f;
-        private const float FRange = 2.5f;
-        private const float F_M1Range = 2.5f;
-        private const float F_M2Range = 9.6f;
-
-        private static bool EvadeExists => EvadeHandler.EvadeExists;
-        private static bool IsREvading => EvadeHandler.RuhKaanR.IsEvading;
-
-        private static readonly UnityEngine.Color RangeColor = new UnityEngine.Color(176f / 255f, 51f / 255f, 230f / 255f);
-        private static readonly UnityEngine.Color MinRangeColor = new UnityEngine.Color(239f / 255f, 122f / 255f, 164f / 255f);
-        private static readonly UnityEngine.Color SafeRangeColor = new UnityEngine.Color(231f / 255f, 240f / 255f, 40f / 255f);
-
-        private static readonly List<Battlerite> Battlerites = new List<Battlerite>(5);
-
-        private static bool HasTenaciousDemon = false;
-        private static bool HasNetherBlade = false;
-
-        private static float TrueERange => !HasTenaciousDemon ? ERange : ERange + (ERange * 12f / 100f);
-
-        private static bool IsInUltimate
-        {
-            get
-            {
-                var abilityHud = LocalPlayer.GetAbilityHudData(AbilitySlot.Ability2);
-                if (abilityHud == null)
-                {
-                    return false;
-                }
-
-                return abilityHud.Name.Equals("ShadowClawAbility");
-            }
-        }
+        private static Vector2 MyPos => LucieHero.MapObject.Position;
 
         private static AbilitySlot? LastAbilityFired = null;
+
+        private const float M1Range = 2.5f;
+        private const float M2Range = 4f;
+        private const float QRange = 8f;
+        private const float ERange = 8.5f;
+        private const float RRange = 3f;
+        private const float FRange = 2.5f;
+        private const float EX1Range = 8.8f;
+        private const float EX2Range = 9.8f;
+
+        private const float M1Speed = 10f;
+        private const float M2Speed = 10f;
+        private const float QAirTime = 0.55f;
+        private const float ESpeed = 21.5f;
+        private const float RSpeed = 10f;
+        private const float EX1Speed = 23.9f;
+        private const float EX2Speed = 22.5f;
+        private const float FAirTime = 0.75f;
+
+        private const float M1Radius = 0.25f;
+        private const float M2Radius = 1.2f;
+        private const float QRadius = 2f;
+        private const float ERadius = 0.35f;
+        private const float RRadius = 3f;
+        private const float FRadius = 3.5f;
+        private const float EX1Radius = 0.35f;
+        private const float EX2Radius = 0.35f;
 
         private static bool DidMatchInit = false;
 
@@ -103,21 +75,13 @@ namespace PipKaan
 
         private void OnMatchStart(EventArgs args)
         {
-            if (KaanHero == null || !KaanHero.CharName.Equals(HeroName))
+            if (LucieHero == null || !LucieHero.CharName.Equals(HeroName))
             {
                 return;
             }
 
-            //KaanHero = LocalPlayer.Instance;
-
             Game.OnUpdate += OnUpdate;
             Game.OnDraw += OnDraw;
-            Game.OnMatchStateUpdate += OnMatchStateUpdate;
-
-            if (Game.CurrentMatchState == MatchState.InRound)
-            {
-                GetBattlerites();
-            }
 
             DidMatchInit = true;
         }
@@ -128,148 +92,81 @@ namespace PipKaan
             {
                 Game.OnUpdate -= OnUpdate;
                 Game.OnDraw -= OnDraw;
-                Game.OnMatchStateUpdate -= OnMatchStateUpdate;
 
                 DidMatchInit = false;
             }
         }
 
-        private void OnMatchStateUpdate(MatchStateUpdate args)
+        private static void InitMenu()
         {
-            if (KaanHero == null)
-            {
-                return;
-            }
+            LucieMenu = new Menu("pipluciemenu", "DaPip's Shifu");
 
-            if (args.OldMatchState == MatchState.BattleritePicking || args.NewMatchState == MatchState.PreRound)
-            {
-                GetBattlerites();
-            }
+            KeysMenu = new Menu("keysmenu", "Keys", true);
+            KeysMenu.Add(new MenuKeybind("keys.combo", "Combo Key", UnityEngine.KeyCode.LeftControl));
+            KeysMenu.Add(new MenuKeybind("keys.healOthers", "Heal others", UnityEngine.KeyCode.Mouse3));
+            KeysMenu.Add(new MenuKeybind("keys.healSelf", "Heal self", UnityEngine.KeyCode.G));
+            KeysMenu.Add(new MenuKeybind("keys.changeTargeting", "Change targeting mode", UnityEngine.KeyCode.T, false, true));
+            LucieMenu.Add(KeysMenu);
+
+            ComboMenu = new Menu("combomenu", "Combo", true);
+            ComboMenu.Add(new MenuCheckBox("combo.invisible", "Attack invisible enemies", true));
+            ComboMenu.Add(new MenuCheckBox("combo.useM1", "Use Left Mouse (Toxic Bolt)", true));
+            ComboMenu.Add(new MenuCheckBox("combo.useM2", "SLASHHHH", true));
+            ComboMenu.Add(new MenuCheckBox("combo.useQ", "Use Q (Clarity Potion) to remove buffs from enemies", true));
+            ComboMenu.Add(new MenuCheckBox("combo.useQA", "Use Q (Clarity Potion) to cleanse allies", true));
+            ComboMenu.Add(new MenuCheckBox("combo.useE", "Use E (Panic Flask)", true));
+            ComboMenu.Add(new MenuSlider("combo.useE.minRange", "    ^ Safe range", 1.7f, 5f, 0f));
+            ComboMenu.Add(new MenuCheckBox("combo.useEX1", "Use EX1 (Deadly Injection)", false));
+            ComboMenu.Add(new MenuIntSlider("combo.useEX1.minEnergyBars", "    ^ Min energy bars", 3, 4, 1));
+            ComboMenu.Add(new MenuCheckBox("combo.useEX2", "Use EX2 (Petrify Bolt)", false));
+            ComboMenu.Add(new MenuIntSlider("combo.useEX2.minEnergyBars", "    ^ Min energy bars", 3, 4, 1));
+            ComboMenu.Add(new MenuCheckBox("combo.useR", "Use R (Roll) when enemies are too close", true));
+            ComboMenu.Add(new MenuComboBox("combo.useR.direction", "    ^ Direction", 0, new[] { "Safest teammate", "Mouse Position" }));
+            ComboMenu.Add(new MenuIntSlider("combo.useR.minEnergyBars", "    ^ Min energy bars", 2, 4, 1));
+            ComboMenu.Add(new MenuSlider("combo.useR.safeRange", "    ^ Safe range", 1.7f, 2.5f, 0f));
+            ComboMenu.Add(new MenuCheckBox("combo.useF", "Use F (Crippling Goo)", true));
+            LucieMenu.Add(ComboMenu);
+
+            HealMenu = new Menu("healmenu", "Healing", true);
+            HealMenu.AddLabel("Hold Healing key to use");
+            HealMenu.Add(new MenuSlider("heal.allySafeRange", "Target ally safe range", 4f, 10f, 0f));
+            HealMenu.Add(new MenuCheckBox("heal.useM2", "Heal with M2 (Healing Potion)", true));
+            HealMenu.Add(new MenuCheckBox("heal.useM2.fullHP", "    ^ Use even if target ally has full health", true));
+            HealMenu.Add(new MenuCheckBox("heal.useSpace", "Use Space (Barrier)", false));
+            HealMenu.Add(new MenuComboBox("heal.useSpace.mode", "    ^ Priority Mode", 0, new[] { "Surrounded by most enemies", "Closest to mouse" }));
+            LucieMenu.Add(HealMenu);
+
+            DrawingsMenu = new Menu("drawmenu", "Drawings", true);
+            DrawingsMenu.Add(new MenuCheckBox("draw.healSafeRange", "Draw healing safe range", true));
+            DrawingsMenu.Add(new MenuCheckBox("draw.rangeR.safeRange", "Draw R safe range", false));
+            LucieMenu.Add(DrawingsMenu);
+
+            MainMenu.AddMenu(LucieMenu);
         }
 
-        private static void GetBattlerites()
+        private static void OnUpdate(EventArgs args)
         {
-            if (KaanHero == null)
+            if (LucieHero.Living.IsDead)
             {
                 return;
             }
 
-            if (Battlerites.Any())
+            if (KeysMenu.GetKeybind("keys.healOthers"))
             {
-                Battlerites.Clear();
+                HealOthers();
             }
-
-            for (var i = 0; i < 5; i++)
+            else if (KeysMenu.GetKeybind("keys.healSelf"))
             {
-                var br = KaanHero.BattleriteSystem.GetEquippedBattlerite(i);
-                if (br != null)
-                {
-                    Battlerites.Add(br);
-                }
+                HealSelf();
             }
-
-            HasTenaciousDemon = Battlerites.Any(x => x.Name.Equals("TenaciousDemonUpgrade"));
-            HasNetherBlade = Battlerites.Any(x => x.Name.Equals("NetherBladeUpgrade"));
-        }
-
-        private void OnUpdate(EventArgs args)
-        {
-            if (KaanHero.Living.IsDead)
-            {
-                return;
-            }
-
-            if (_debugMode)
-            {
-                DebugUpdate();
-            }
-
-            if (KeysMenu.GetKeybind("keys.combo"))
+            else if (KeysMenu.GetKeybind("keys.combo"))
             {
                 ComboMode();
             }
-            else if (/*KeysMenu.GetKeybind("keys.orb")*/false)
-            {
-                //OrbMode();
-            }
-            else if (KeysMenu.GetKeybind("keys.heal"))
-            {
-                HealTeammate();
-            }
             else
             {
                 LocalPlayer.EditAimPosition = false;
                 LastAbilityFired = null;
-            }
-        }
-
-        private static void DebugUpdate()
-        {
-            if (DebugMenu.GetBoolean("debug.updateBattlerites"))
-            {
-                GetBattlerites();
-                DebugMenu.SetBoolean("debug.updateBattlerites", false);
-            }
-        }
-
-        private static void HealTeammate()
-        {
-            var minAllyHp = HealMenu.GetSlider("heal.minHpOther");
-            var energyRequired = HealMenu.GetIntSlider("heal.minEnergyBars") * 25;
-
-            var possibleAllies = EntitiesManager.LocalTeam.Where(x => !x.IsLocalPlayer && !x.Living.IsDead && !x.PhysicsCollision.IsImmaterial
-            && x.Living.HealthPercent <= minAllyHp);
-
-            var allyToTarget = TargetSelector.GetTarget(possibleAllies, TargetingMode.NearMouse, TrueERange);
-
-            var isCastingOrChanneling = KaanHero.AbilitySystem.IsCasting || KaanHero.IsChanneling || KaanHero.HasBuff("ConsumeBuff") || KaanHero.HasBuff("ReapingScytheBuff");
-
-            if (isCastingOrChanneling && LastAbilityFired == null)
-            {
-                LastAbilityFired = CastingIndexToSlot(KaanHero.AbilitySystem.CastingAbilityIndex);
-            }
-
-            var myPos = KaanHero.MapObject.Position;
-
-            if (isCastingOrChanneling)
-            {
-                LocalPlayer.EditAimPosition = true;
-
-                switch (LastAbilityFired)
-                {
-                    case AbilitySlot.EXAbility2:
-                        if (allyToTarget != null)
-                        {
-                            var pred = TestPrediction.GetNormalLinePrediction(myPos, allyToTarget, TrueERange, ESpeed, ERadius, true);
-                            if (pred.CanHit)
-                            {
-                                LocalPlayer.Aim(pred.CastPosition);
-                            }
-                        }
-                        break;
-                }
-            }
-            else
-            {
-                LocalPlayer.EditAimPosition = false;
-                LastAbilityFired = null;
-            }
-
-            if (MiscUtils.CanCast(AbilitySlot.EXAbility2))
-            {
-                if (energyRequired <= KaanHero.Energized.Energy)
-                {
-                    if (LastAbilityFired == null && allyToTarget != null)
-                    {
-                        var pred = TestPrediction.GetNormalLinePrediction(myPos, allyToTarget, TrueERange, ESpeed, ERadius, true);
-                        if (pred.CanHit)
-                        {
-                            LocalPlayer.PressAbility(AbilitySlot.EXAbility2, true);
-                            LocalPlayer.EditAimPosition = true;
-                            LocalPlayer.Aim(pred.CastPosition);
-                        }
-                    }
-                }
             }
         }
 
@@ -278,54 +175,128 @@ namespace PipKaan
             var targetModeKey = KeysMenu.GetKeybind("keys.changeTargeting");
             var targetMode = targetModeKey ? TargetingMode.LowestHealth : TargetingMode.NearMouse;
 
-            var invisibleTargets = ComboMenu.GetBoolean("combo.invisibleTargets");
+            var enemiesToTargetBase = EntitiesManager.EnemyTeam.Where(x => x.IsValid && !x.Living.IsDead
+            && !x.HasBuff("OtherSideBuff") && !x.HasBuff("AscensionBuff") && !x.HasBuff("AscensionTravelBuff") &&
+            !x.HasBuff("Fleetfoot") && !x.HasBuff("TempestRushBuff") && !x.HasBuff("ValiantLeap") && !x.HasBuff("FrogLeap") &&
+            !x.HasBuff("FrogLeapRecast") && !x.HasBuff("ElusiveStrikeCharged") && !x.HasBuff("ElusiveStrikeWall2") && 
+            !x.HasBuff("BurrowAlternate") && !x.HasBuff("JetPack") && !x.HasBuff("ProwlBuff") && !x.HasBuff("Dive") &&
+            !x.HasBuff("InfestingBuff") && !x.HasBuff("PortalBuff") && !x.HasBuff("CrushingBlow") && !x.HasBuff("TornadoBuff"));
 
-            var enemiesToTarget = EntitiesManager.EnemyTeam.Where(x => x.IsValid && !x.Living.IsDead
-            && !x.PhysicsCollision.IsImmaterial && !x.IsCountering && !x.HasShield() && !x.HasConsumeBuff && !x.HasParry());
+            var alliesToTargetBaseQ = EntitiesManager.LocalTeam.Where(x => !x.Living.IsDead && !x.PhysicsCollision.IsImmaterial);
+            var enemiesToTargetBaseQ = EntitiesManager.EnemyTeam.Where(x => x.IsValid && !x.Living.IsDead);
 
-            if (!invisibleTargets)
+            if (!ComboMenu.GetBoolean("combo.invisible"))
             {
-                enemiesToTarget = enemiesToTarget.Where(x => !x.CharacterModel.IsModelInvisible);
+                enemiesToTargetBase = enemiesToTargetBase.Where(x => !x.CharacterModel.IsModelInvisible);
             }
 
-            var M1Target = TargetSelector.GetTarget(enemiesToTarget, targetMode, M1Range);
-            var M2Target = TargetSelector.GetTarget(enemiesToTarget, targetMode, M2Range);
-            var SpaceTarget = TargetSelector.GetTarget(enemiesToTarget, targetMode, SpaceMaxRange);
-            var ETarget = TargetSelector.GetTarget(enemiesToTarget, targetMode, TrueERange);
-            var RTarget = TargetSelector.GetTarget(enemiesToTarget, targetMode, RRange);
-            var F_M2Target = TargetSelector.GetTarget(enemiesToTarget, targetMode, F_M2Range);
+            var enemiesToTargetProjs = enemiesToTargetBase.Where(x =>
+            !x.IsCountering && !x.HasShield() && !x.HasConsumeBuff && !x.HasParry() && !x.HasBuff("ElectricShield") && !x.HasBuff("BarbedHuskBuff"));
 
-            var isCastingOrChanneling = KaanHero.AbilitySystem.IsCasting || KaanHero.IsChanneling || KaanHero.HasBuff("ConsumeBuff") || KaanHero.HasBuff("ReapingScytheBuff");
+            // Dispelling Debuff (allies):
+            //
+            var alliesToTargetQ = alliesToTargetBaseQ.Where(x =>
+            x.HasBuff("Weaken") || x.HasBuff("LunarStrikePetrify") || x.HasBuff("Incapacitate") ||
+            (!x.IsLocalPlayer && (x.HasBuff("Panic") || x.HasBuff("DeadlyInjectionBuff"))) || 
+            x.HasBuff("PhantomCutBuff") || x.HasBuff("EntanglingRootsBuff") || x.HasBuff("ArmorBreak") || x.HasBuff("FrostDebuff") ||
+            x.HasBuff("Frozen") || x.HasBuff("StormStruckDebuff") || x.HasBuff("BrainBugDebuff") || x.HasBuff("HandOfJudgementBuff") ||
+            // x.HasBuff("HandOfCorruptionBuff) ||
+            x.HasBuff("SheepTrickDebuff") || x.HasBuff("SludgeSpitDebuff") || x.HasBuff("BlindingLightBlind"));
+            //
+
+            // Dispelling Buff (ennemies):
+            //
+            var enemiesToTargetQ = enemiesToTargetBaseQ.Where(x =>
+            // Bakko:
+            x.HasBuff("BulwarkBuff") || x.HasBuff("WarShoutShield") ||
+            // Croak:
+            x.HasBuff("NewCamouflage") || x.HasBuff("Deceit") ||
+            // Freya:
+            // x.HasBuff("ElectricShield") || x.HasBuff("ElectricShieldSecondary") ||
+            // Jamila:
+            x.HasBuff("ShadowStalkStealth") ||
+            // Raigon:
+            // x.HasBuff("Parry") ||
+            // Ruh Kaan:
+            // x.HasBuff("ConsumeBuff") ||
+            // Shifu:
+            x.HasBuff("Fleetfoot") || x.HasBuff("TempestRushBuff") ||
+            // Alysia:
+            x.HasBuff("GlacialPrism") ||
+            // Ezmo:
+            x.HasBuff("ArcaneWard") ||
+            // Iva:
+            // x.HasBuff("Zap") ||
+            // Jade:
+            x.HasBuff("Stealth") ||
+            // Taya:
+            // x.HasBuff("HasteBuff") ||
+            // Varesh:
+            // x.HasBuff("InhibitorsGuard") ||
+            // Blossom:
+            // x.HasBuff("InstinctStealth") ||
+            // Lucie:
+            x.HasBuff("Barrier") ||
+            // Oldur:
+            x.HasBuff("TimeBenderBuff") ||
+            // Pearl:
+            x.HasBuff("BubbleShield") ||
+            // Pestilus:
+            x.HasBuff("Swarm") ||
+            // Poloma:
+            x.HasBuff("OtherSideBuff") ||
+            // Ulric:
+            x.HasBuff("DivineShieldBuff") || x.HasBuff("AegisOfValorBuff") ||
+            // Zander:
+            x.HasBuff("RabbitFormBuff"));
+            //
+
+            var targetM1 = TargetSelector.GetTarget(enemiesToTargetProjs, targetMode, M1Range);
+            var targetM2 = TargetSelector.GetTarget(enemiesToTargetProjs, targetMode, M2Range);
+            var targetE = TargetSelector.GetTarget(enemiesToTargetProjs, targetMode, ERange);
+            var alliesQ = TargetSelector.GetTarget(alliesToTargetQ, targetMode, QRange);
+            var targetQ = TargetSelector.GetTarget(enemiesToTargetQ, targetMode, QRange);
+            var targetEX1 = TargetSelector.GetTarget(enemiesToTargetProjs, targetMode, EX1Range);
+            var targetEX2 = TargetSelector.GetTarget(enemiesToTargetProjs, targetMode, EX2Range);
+            var targetR = TargetSelector.GetTarget(enemiesToTargetProjs, targetMode, RRange);
+            var targetF = TargetSelector.GetTarget(enemiesToTargetBase, targetMode, FRange);
+
+            var isCastingOrChanneling = LucieHero.AbilitySystem.IsCasting || LucieHero.IsChanneling;
 
             if (isCastingOrChanneling && LastAbilityFired == null)
             {
-                LastAbilityFired = CastingIndexToSlot(KaanHero.AbilitySystem.CastingAbilityIndex);
+                LastAbilityFired = CastingIndexToSlot(LucieHero.AbilitySystem.CastingAbilityIndex);
             }
 
-            var myPos = KaanHero.MapObject.Position;
-
-            if (isCastingOrChanneling)
+            if (isCastingOrChanneling && !LucieHero.HasBuff("KunjuBuff"))
             {
                 LocalPlayer.EditAimPosition = true;
 
                 switch (LastAbilityFired)
                 {
-                    case AbilitySlot.Ability4:
-                        Projectile enemyProj;
-                        if (EnemyProjectileGoingToHitUnit(KaanHero, out enemyProj))
+                    case AbilitySlot.Ability6:
+                        if (targetR != null)
                         {
-                            LocalPlayer.Aim(enemyProj.MapObject.Position);
+                            LocalPlayer.Aim(targetR.MapObject.Position);
                         }
                         else
                         {
-                            LocalPlayer.Aim(InputManager.MousePosition.ScreenToWorld());
+                            LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
                         }
                         break;
 
-                    case AbilitySlot.Ability5:
-                        if (ETarget != null)
+                    case AbilitySlot.Ability4:
+                        if (alliesQ != null)
                         {
-                            var pred = TestPrediction.GetNormalLinePrediction(myPos, ETarget, TrueERange, ESpeed, ERadius, true);
+                            var pred = TestPrediction.GetPrediction(MyPos, alliesQ, QRange, 0f, QRadius, QAirTime);
+                            if (pred.CanHit)
+                            {
+                                LocalPlayer.Aim(pred.CastPosition);
+                            }
+                        }
+                        else if (targetQ != null)
+                        {
+                            var pred = TestPrediction.GetPrediction(MyPos, targetQ, QRange, 0f, QRadius, QAirTime);
                             if (pred.CanHit)
                             {
                                 LocalPlayer.Aim(pred.CastPosition);
@@ -334,53 +305,53 @@ namespace PipKaan
                         break;
 
                     case AbilitySlot.Ability2:
-                        if (!IsInUltimate) //Normal mode
+                        if (targetM2 != null)
                         {
-                            if (M2Target != null)
-                            {
-                                var pred = TestPrediction.GetNormalLinePrediction(myPos, M2Target, M2Range, M2Speed, M2Radius, true);
-                                if (pred.CanHit)
-                                {
-                                    LocalPlayer.Aim(pred.CastPosition);
-                                }
-                            }
-                        }
-                        else //Ulti mode
-                        {
-                            if (F_M2Target != null)
-                            {
-                                var pred = TestPrediction.GetNormalLinePrediction(myPos, F_M2Target, F_M2Range, F_M2Speed, F_M2Radius, true);
-                                if (pred.CanHit)
-                                {
-                                    LocalPlayer.Aim(pred.CastPosition);
-                                }
-                            }
+                            LocalPlayer.Aim(targetM2.MapObject.Position);
                         }
                         break;
 
-                    case AbilitySlot.Ability6:
-                        if (ComboMenu.GetBoolean("combo.useR.evade") && EvadeExists && IsREvading && RTarget == null)
+                    case AbilitySlot.Ability7:
+                        if (targetF != null)
                         {
-                            var pos = MathUtils.GetBestJumpPosition(0, 32, SpaceMaxRange);
-                            LocalPlayer.Aim(pos);
+                            LocalPlayer.Aim(targetF.MapObject.Position);
+                        }
+                        break;
+
+                    case AbilitySlot.Ability5:
+                        if (targetE != null)
+                        {
+                            var pred = TestPrediction.GetNormalLinePrediction(MyPos, targetE, ERange, ESpeed, ERadius, true);
+                            if (pred.CanHit)
+                            {
+                                LocalPlayer.Aim(pred.CastPosition);
+                            }
                         }
                         else
                         {
-                            if (RTarget != null)
-                            {
-                                var pred = TestPrediction.GetPrediction(myPos, RTarget, RRange, 0f, RRadius, RAirTime);
-                                if (pred.CanHit)
-                                {
-                                    LocalPlayer.Aim(pred.CastPosition);
-                                }
-                            }
+                            LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
                         }
                         break;
 
-                    case AbilitySlot.Ability3:
-                        if (SpaceTarget != null)
+                    case AbilitySlot.EXAbility2:
+                        if (targetEX2 != null)
                         {
-                            var pred = TestPrediction.GetPrediction(myPos, SpaceTarget, SpaceMaxRange, 0f, SpaceRadius, SpaceAirTime);
+                            var pred = TestPrediction.GetNormalLinePrediction(MyPos, targetEX2, EX2Range, EX2Speed, EX2Radius, true);
+                            if (pred.CanHit)
+                            {
+                                LocalPlayer.Aim(pred.CastPosition);
+                            }
+                        }
+                        else
+                        {
+                            LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
+                        }
+                        break;
+
+                    case AbilitySlot.EXAbility1:
+                        if (targetEX1 != null)
+                        {
+                            var pred = TestPrediction.GetNormalLinePrediction(MyPos, targetEX1, EX1Range, EX1Speed, EX1Radius, true);
                             if (pred.CanHit)
                             {
                                 LocalPlayer.Aim(pred.CastPosition);
@@ -389,9 +360,13 @@ namespace PipKaan
                         break;
 
                     case AbilitySlot.Ability1:
-                        if (M1Target != null)
+                        if (targetM1 != null)
                         {
-                            LocalPlayer.Aim(M1Target.MapObject.Position);
+                            LocalPlayer.Aim(targetM1.MapObject.Position);
+                        }
+                        else
+                        {
+                            LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
                         }
                         break;
                 }
@@ -402,368 +377,320 @@ namespace PipKaan
                 LastAbilityFired = null;
             }
 
-            if (!IsInUltimate)
+            if (ComboMenu.GetBoolean("combo.useF") && MiscUtils.CanCast(AbilitySlot.Ability7))
             {
-                if (ComboMenu.GetBoolean("combo.useQ") && MiscUtils.CanCast(AbilitySlot.Ability4) && !MiscUtils.CanCast(AbilitySlot.Ability2))
+                if (LastAbilityFired == null && LucieHero.EnemiesAroundAlive(FRange) > 0)
                 {
-                    Projectile closestProj;
-                    if (EnemyProjectileGoingToHitUnit(KaanHero, out closestProj))
+                    LocalPlayer.PressAbility(AbilitySlot.Ability7, true);
+                    return;
+                }
+            }
+
+            if (ComboMenu.GetBoolean("combo.useM2") && MiscUtils.CanCast(AbilitySlot.Ability2))
+            {
+                if (LastAbilityFired == null && targetM2 != null)
+                {
+                    LocalPlayer.PressAbility(AbilitySlot.Ability2, true);
+                    return;
+                }
+            }
+
+            if (ComboMenu.GetBoolean("combo.useQA") && MiscUtils.CanCast(AbilitySlot.Ability4))
+            {
+                if (LastAbilityFired == null && alliesQ != null)
+                {
+                    var pred = TestPrediction.GetPrediction(MyPos, alliesQ, QRange, 0f, QRadius, QAirTime);
+                    if (pred.CanHit)
                     {
                         LocalPlayer.PressAbility(AbilitySlot.Ability4, true);
-                        LocalPlayer.EditAimPosition = true;
-                        LocalPlayer.Aim(closestProj.MapObject.Position);
                         return;
                     }
                 }
+            }
 
-                if (ComboMenu.GetBoolean("combo.useF") && MiscUtils.CanCast(AbilitySlot.Ability7))
+            if (ComboMenu.GetBoolean("combo.useQ") && MiscUtils.CanCast(AbilitySlot.Ability4))
+            {
+                if (LastAbilityFired == null && targetQ != null)
                 {
-                    if (LastAbilityFired == null && KaanHero.EnemiesAroundAlive(FRange) > 0)
+                    var pred = TestPrediction.GetPrediction(MyPos, targetQ, QRange, 0f, QRadius, QAirTime);
+                    if (pred.CanHit)
                     {
-                        LocalPlayer.PressAbility(AbilitySlot.Ability7, true);
+                        LocalPlayer.PressAbility(AbilitySlot.Ability4, true);
                         return;
                     }
                 }
+            }
 
-                if (ComboMenu.GetBoolean("combo.useE") && MiscUtils.CanCast(AbilitySlot.Ability5))
+            if (ComboMenu.GetBoolean("combo.useR") && MiscUtils.CanCast(AbilitySlot.Ability6))
+            {
+                if (LastAbilityFired == null && targetR != null && !LucieHero.HasBuff("KunjuMeleeAttackBuff"))
                 {
-                    if (LastAbilityFired == null && ETarget != null && ETarget.Distance(KaanHero) > ComboMenu.GetSlider("combo.useE.minRange"))
+                    LocalPlayer.PressAbility(AbilitySlot.Ability6, true);
+                    return;
+                }
+            }
+
+            if (ComboMenu.GetBoolean("combo.useEX2") && MiscUtils.CanCast(AbilitySlot.EXAbility2))
+            {
+                var energyRequired = ComboMenu.GetIntSlider("combo.useEX2.minEnergyBars") * 25;
+                if (energyRequired <= LucieHero.Energized.Energy)
+                {
+                    if (LastAbilityFired == null && targetEX2 != null)
                     {
-                        var pred = TestPrediction.GetNormalLinePrediction(myPos, ETarget, TrueERange, ESpeed, ERadius, true);
+                        var pred = TestPrediction.GetNormalLinePrediction(MyPos, targetEX2, EX2Range, EX2Speed, EX2Radius, true);
                         if (pred.CanHit)
                         {
-                            LocalPlayer.PressAbility(AbilitySlot.Ability5, true);
-                            LocalPlayer.EditAimPosition = true;
-                            LocalPlayer.Aim(pred.CastPosition);
+                            LocalPlayer.PressAbility(AbilitySlot.EXAbility2, true);
                             return;
                         }
                     }
                 }
+            }
 
-                if (ComboMenu.GetBoolean("combo.useM2") && MiscUtils.CanCast(AbilitySlot.Ability2))
+            if (ComboMenu.GetBoolean("combo.useEX1") && MiscUtils.CanCast(AbilitySlot.EXAbility1))
+            {
+                var energyRequired = ComboMenu.GetIntSlider("combo.useEX1.minEnergyBars") * 25;
+                if (energyRequired <= LucieHero.Energized.Energy)
                 {
-                    if (LastAbilityFired == null && M2Target != null
-                        && KaanHero.EnemiesAroundAlive(ComboMenu.GetSlider("combo.useM2.safeRange")) == 0)
+                    if (LastAbilityFired == null && targetEX1 != null)
                     {
-                        var pred = TestPrediction.GetNormalLinePrediction(myPos, M2Target, M2Range, M2Speed, M2Radius, true);
+                        var pred = TestPrediction.GetNormalLinePrediction(MyPos, targetEX1, EX1Range, EX1Speed, EX1Radius, true);
                         if (pred.CanHit)
-                        {
-                            LocalPlayer.PressAbility(AbilitySlot.Ability2, true);
-                            LocalPlayer.EditAimPosition = true;
-                            LocalPlayer.Aim(pred.CastPosition);
-                            return;
-                        }
-                    }
-                }
-
-                if (ComboMenu.GetBoolean("combo.useR") && MiscUtils.CanCast(AbilitySlot.Ability6) && !KaanHero.IsWeaponCharged && HasNetherBlade)
-                {
-                    var energyRequired = ComboMenu.GetIntSlider("combo.useR.minEnergyBars") * 25;
-                    if (energyRequired <= KaanHero.Energized.Energy)
-                    {
-                        if (LastAbilityFired == null && RTarget != null)
-                        {
-                            var pred = TestPrediction.GetPrediction(myPos, RTarget, RRange, 0f, RRadius, RAirTime);
-                            if (pred.CanHit)
-                            {
-                                LocalPlayer.PressAbility(AbilitySlot.Ability6, true);
-                                LocalPlayer.EditAimPosition = true;
-                                LocalPlayer.Aim(pred.CastPosition);
-                                return;
-                            }
-                        }
-                    }
-                }
-
-                if (ComboMenu.GetBoolean("combo.useEX1") && MiscUtils.CanCast(AbilitySlot.EXAbility1))
-                {
-                    var energyRequired = ComboMenu.GetIntSlider("combo.useEX1.minEnergyBars") * 25;
-                    if (energyRequired <= KaanHero.Energized.Energy)
-                    {
-                        if (LastAbilityFired == null && M1Target != null)
                         {
                             LocalPlayer.PressAbility(AbilitySlot.EXAbility1, true);
                             return;
                         }
                     }
                 }
+            }
 
-                if (ComboMenu.GetBoolean("combo.useSpace") && MiscUtils.CanCast(AbilitySlot.Ability3))
+            if (ComboMenu.GetBoolean("combo.useE") && MiscUtils.CanCast(AbilitySlot.Ability5))
+            {
+                if (LastAbilityFired != AbilitySlot.Ability5 && targetE != null && targetE.Distance(LucieHero) > ComboMenu.GetSlider("combo.useE.minRange"))
                 {
-                    if (LastAbilityFired == null && SpaceTarget != null)
+                    var pred = TestPrediction.GetNormalLinePrediction(MyPos, targetE, ERange, ESpeed, ERadius, true);
+                    if (pred.CanHit)
                     {
-                        var pred = TestPrediction.GetPrediction(myPos, SpaceTarget, SpaceMaxRange, 0f, SpaceRadius, SpaceAirTime);
-                        if (pred.CanHit)
-                        {
-                            LocalPlayer.PressAbility(AbilitySlot.Ability3, true);
-                            LocalPlayer.EditAimPosition = true;
-                            LocalPlayer.Aim(pred.CastPosition);
-                            return;
-                        }
-                    }
-                }
-
-                if (ComboMenu.GetBoolean("combo.useM1") && MiscUtils.CanCast(AbilitySlot.Ability1))
-                {
-                    if (LastAbilityFired == null && M1Target != null)
-                    {
-                        LocalPlayer.PressAbility(AbilitySlot.Ability1, true);
-                        LocalPlayer.EditAimPosition = true;
-                        LocalPlayer.Aim(M1Target.MapObject.Position);
+                        LocalPlayer.PressAbility(AbilitySlot.Ability5, true);
                         return;
                     }
                 }
             }
-            else
-            {
-                if (ComboMenu.GetBoolean("combo.ultiMode.useM2") && MiscUtils.CanCast(AbilitySlot.Ability2))
-                {
-                    if (LastAbilityFired == null && F_M2Target != null
-                        && F_M2Target.Distance(KaanHero) > ComboMenu.GetSlider("combo.ultiMode.useM2.minRange"))
-                    {
-                        var pred = TestPrediction.GetNormalLinePrediction(myPos, F_M2Target, F_M2Range, F_M2Speed, F_M2Radius, true);
-                        if (pred.CanHit)
-                        {
-                            LocalPlayer.PressAbility(AbilitySlot.Ability2, true);
-                            LocalPlayer.EditAimPosition = true;
-                            LocalPlayer.Aim(pred.CastPosition);
-                            return;
-                        }
-                    }
-                }
 
-                if (ComboMenu.GetBoolean("combo.ultiMode.useM1") && MiscUtils.CanCast(AbilitySlot.Ability1))
+            if (ComboMenu.GetBoolean("combo.useM1") && MiscUtils.CanCast(AbilitySlot.Ability1))
+            {
+                if (LastAbilityFired == null && targetM1 != null)
                 {
-                    if (LastAbilityFired == null && M1Target != null)
-                    {
-                        LocalPlayer.PressAbility(AbilitySlot.Ability1, true);
-                        LocalPlayer.EditAimPosition = true;
-                        LocalPlayer.Aim(M1Target.MapObject.Position);
-                        return;
-                    }
+                    LocalPlayer.PressAbility(AbilitySlot.Ability1, true);
+                    return;
                 }
             }
-        }
-
-        private void OnDraw(EventArgs args)
-        {
-            if (!Game.IsInGame)
-            {
-                return;
-            }
-
-            if (KaanHero.Living.IsDead)
-            {
-                return;
-            }
-
-            if (DrawMenu.GetBoolean("draw.disableAll"))
-            {
-                return;
-            }
-
-            if (_debugMode)
-            {
-                DebugDraw();
-            }
-
-            Drawing.DrawString(new Vector2(1920f / 2f, 1080f / 2f - 5f),
-                "Targeting mode: " + (KeysMenu.GetKeybind("keys.changeTargeting") ? "LowestHealth" : "NearMouse"), UnityEngine.Color.yellow, ViewSpace.ScreenSpacePixels);
-
-            var myPos = KaanHero.MapObject.Position;
-
-            if (DrawMenu.GetBoolean("draw.rangeM2"))
-            {
-                Drawing.DrawCircle(myPos, M2Range, RangeColor);
-            }
-
-            if (DrawMenu.GetBoolean("draw.rangeM2.safeRange"))
-            {
-                Drawing.DrawCircle(myPos, ComboMenu.GetSlider("combo.useM2.safeRange"), SafeRangeColor);
-            }
-
-            if (DrawMenu.GetBoolean("draw.rangeE"))
-            {
-                Drawing.DrawCircle(myPos, TrueERange, RangeColor);
-            }
-
-            if (DrawMenu.GetBoolean("draw.rangeE.minRange"))
-            {
-                Drawing.DrawCircle(myPos, ComboMenu.GetSlider("combo.useE.minRange"), MinRangeColor);
-            }
-
-            if (DrawMenu.GetBoolean("draw.ultiMode.rangeM2"))
-            {
-                Drawing.DrawCircle(myPos, F_M2Range, RangeColor);
-            }
-
-            if (DrawMenu.GetBoolean("draw.ultiMode.rangeM2.minRange"))
-            {
-                Drawing.DrawCircle(myPos, ComboMenu.GetSlider("combo.ultiMode.useM2.minRange"), MinRangeColor);
-            }
-        }
-
-        private static void DebugDraw()
-        {
-            if (DebugMenu.GetBoolean("debug.checkBattlerites"))
-            {
-                var pos = new Vector2(150f, 100f);
-                Drawing.DrawString(pos, "Tenacious Demon: " + HasTenaciousDemon, UnityEngine.Color.cyan, ViewSpace.ScreenSpacePixels);
-                var pos2 = new Vector2(150f, 120f);
-                Drawing.DrawString(pos2, "Nether Blade: " + HasNetherBlade, UnityEngine.Color.cyan, ViewSpace.ScreenSpacePixels);
-            }
-
-            if (DebugMenu.GetBoolean("debug.trueERange"))
-            {
-                var pos = new Vector2(150f, 140f);
-                Drawing.DrawString(pos, "True E Range: " + TrueERange, UnityEngine.Color.yellow, ViewSpace.ScreenSpacePixels);
-            }
-
-            if (DebugMenu.GetBoolean("debug.ultiStatus"))
-            {
-                var pos = new Vector2(150f, 160f);
-                Drawing.DrawString(pos, "Ulti mode: " + IsInUltimate, UnityEngine.Color.cyan, ViewSpace.ScreenSpacePixels);
-            }
-
-            if (DebugMenu.GetBoolean("debug.isCasting"))
-            {
-                var pos = new Vector2(150f, 180f);
-                var isCasting = KaanHero.AbilitySystem.IsCasting;
-                var isChanneling = KaanHero.IsChanneling;
-                Drawing.DrawString(pos, "Is Casting: " + isCasting + " - Is Channeling: " + isChanneling, UnityEngine.Color.yellow, ViewSpace.ScreenSpacePixels);
-            }
-        }
-
-        private static void InitMenu()
-        {
-            KaanMenu = new Menu("pipshifumenu", "DaPip's Shifu", false);
-
-            KeysMenu = new Menu("keysmenu", "Keys", true);
-            KeysMenu.Add(new MenuKeybind("keys.combo", "Combo key", UnityEngine.KeyCode.Mouse0));
-            //KeysMenu.Add(new MenuKeybind("keys.orb", "Orb mode", UnityEngine.KeyCode.Mouse3));
-            KeysMenu.Add(new MenuKeybind("keys.heal", "Heal teammate", UnityEngine.KeyCode.P));
-            KeysMenu.Add(new MenuKeybind("keys.changeTargeting", "Change targeting mode", UnityEngine.KeyCode.Y, false, true));
-            KaanMenu.Add(KeysMenu);
-
-            ComboMenu = new Menu("combomenu", "Combo", true);
-            ComboMenu.Add(new MenuCheckBox("combo.invisibleTargets", "Attack invisible targets", true));
-            ComboMenu.Add(new MenuCheckBox("combo.useM1", "Use Left-Mouse (Defiled Blade)", true));
-            ComboMenu.Add(new MenuCheckBox("combo.useM2", "Use Right-Mouse (Shadowbolt)", true));
-            ComboMenu.Add(new MenuSlider("combo.useM2.safeRange", "    ^ Safe range", 0f, M2Range - 1f, 0f));
-            ComboMenu.Add(new MenuCheckBox("combo.useSpace", "Use Space (Sinister Strike)", false));
-            ComboMenu.Add(new MenuCheckBox("combo.useQ", "Use Q (Consume) to reset Right-Mouse", true));
-            ComboMenu.Add(new MenuCheckBox("combo.useE", "Use E (Claw of the wicked)", true));
-            ComboMenu.Add(new MenuSlider("combo.useE.minRange", "    ^ Minimum range", 4f, ERange - 1f, 0f));
-            ComboMenu.Add(new MenuCheckBox("combo.useR", "Use R (Nether Void) to refill Left-Mouse (if Nether Blade is active)", false));
-            ComboMenu.Add(new MenuIntSlider("combo.useR.minEnergyBars", "    ^ Min energy bars", 3, 4, 1));
-            ComboMenu.Add(new MenuCheckBox("combo.useR.evade", "Use R (Nether Void) to evade (needs HoyerEvade)", false));
-            ComboMenu.Add(new MenuCheckBox("combo.useEX1", "Use EX1 (Reaping Scythe)", false));
-            ComboMenu.Add(new MenuIntSlider("combo.useEX1.minEnergyBars", "    ^ Min energy bars", 3, 4, 1));
-            ComboMenu.Add(new MenuCheckBox("combo.useF", "Use F (Shadow Beast) when there's an  enemy in range", true));
-
-            ComboMenu.AddSeparator(10f);
-            ComboMenu.AddLabel("While in Ultimate (Shadow Beast) Mode");
-            ComboMenu.Add(new MenuCheckBox("combo.ultiMode.useM1", "Use Left-Mouse (Fang of the faceless)", false));
-            ComboMenu.Add(new MenuCheckBox("combo.ultiMode.useM2", "Use Right-Mouse (Shadow Claw)", false));
-            ComboMenu.Add(new MenuSlider("combo.ultiMode.useM2.minRange", "    ^ Min Range", F_M1Range, F_M2Range - 1f, 0f));
-            KaanMenu.Add(ComboMenu);
-
-            HealMenu = new Menu("healmenu", "Heal", true);
-            HealMenu.AddLabel("Heal key will grab ally closest to mouse that satisfies the conditions below");
-            HealMenu.Add(new MenuSlider("heal.minHpOther", "Ally HP% <= X to grab him/her", 100f, 100f, 1f));
-            HealMenu.Add(new MenuIntSlider("heal.minEnergyBars", "Min energy bars", 1, 4, 1));
-            KaanMenu.Add(HealMenu);
-
-            DrawMenu = new Menu("drawingsmenu", "Drawings", true);
-            DrawMenu.Add(new MenuCheckBox("draw.disableAll", "Disable all drawings", false));
-            DrawMenu.Add(new MenuCheckBox("draw.rangeM2", "Draw Right-Mouse Range (Shadowbolt)", false));
-            DrawMenu.Add(new MenuCheckBox("draw.rangeM2.safeRange", "Draw Right-Mouse Safe-Range", false));
-            DrawMenu.Add(new MenuCheckBox("draw.rangeE", "Draw E Range (Claw of the wicked)", false));
-            DrawMenu.Add(new MenuCheckBox("draw.rangeE.minRange", "Draw E Minimum range to use (Claw of the wicked)", false));
-            DrawMenu.AddSeparator(10f);
-            DrawMenu.AddLabel("While in Ultimate (Shadow Beast) Ranges");
-            DrawMenu.Add(new MenuCheckBox("draw.ultiMode.rangeM2", "Draw Right-Mouse Range (Shadow Claw)", false));
-            DrawMenu.Add(new MenuCheckBox("draw.ultiMode.rangeM2.minRange", "Draw Right-Mouse Minimum range to use (Shadow Claw)", false));
-            KaanMenu.Add(DrawMenu);
-
-            DebugMenu = new Menu("debugmenu", "Debug", true);
-            DebugMenu.Add(new MenuCheckBox("debug.updateBattlerites", "Update battlerites", false));
-            DebugMenu.Add(new MenuCheckBox("debug.checkBattlerites", "Check battlerites status", false));
-            DebugMenu.Add(new MenuCheckBox("debug.trueERange", "True E Range", false));
-            DebugMenu.Add(new MenuCheckBox("debug.ultiStatus", "Ultimate status", false));
-            DebugMenu.Add(new MenuCheckBox("debug.isCasting", "Is casting?", false));
-            DebugMenu.Add(new MenuCheckBox("debug.abilityUsage", "Print 'tried to use X ability'?", true));
-            if (_debugMode)
-            {
-                KaanMenu.Add(DebugMenu);
-            }
-
-            MainMenu.AddMenu(KaanMenu);
-
-            EvadeHandler.Setup();
         }
 
         private static AbilitySlot? CastingIndexToSlot(int index)
         {
             switch (index)
             {
-                case 8:
-                case 9:
-                case 13:
-                case 14:
-                case 18:
-                    return AbilitySlot.Ability1;
-                case 3:
-                case 10:
-                    return AbilitySlot.Ability2;
                 case 0:
-                    return AbilitySlot.Ability3;
+                    return AbilitySlot.Ability1;
                 case 2:
-                    return AbilitySlot.Ability4;
+                    return AbilitySlot.Ability2;
+                case 3:
+                    return AbilitySlot.Ability3;
                 case 4:
+                case 9:
+                    return AbilitySlot.Ability4;
+                case 5:
                     return AbilitySlot.Ability5;
-                case 6:
+                case 7:
                     return AbilitySlot.Ability6;
-                case 11:
-                case 12:
+                case 8:
                     return AbilitySlot.Ability7;
                 case 1:
                     return AbilitySlot.EXAbility1;
-                case 5:
+                case 6:
                     return AbilitySlot.EXAbility2;
-                case 15:
+                case 10:
                     return AbilitySlot.Mount;
             }
 
             return null;
         }
 
-        private static bool EnemyProjectileGoingToHitUnit(InGameObject unit, out Projectile closestProj)
+        private static void HealOthers()
         {
-            var unitPos = unit.Get<MapGameObject>().Position;
-            var unitRadius = unit.Get<SpellCollisionObject>().SpellCollisionRadius;
-            var enemyProjs = EntitiesManager.ActiveProjectiles.Where(x => x.BaseObject.TeamId != KaanHero.BaseObject.TeamId).OrderBy(x => x.MapObject.Position.Distance(unitPos));
+            var useM2 = HealMenu.GetBoolean("heal.useM2");
+            var useM2FullHP = HealMenu.GetBoolean("heal.useM2.fullHP");
+            var useSpace = HealMenu.GetBoolean("heal.useSpace");
+            var useSpaceMode = HealMenu.GetComboBox("heal.useSpace.mode");
+            var safeRange = HealMenu.GetSlider("heal.allySafeRange");
 
-            foreach (var enemyProj in enemyProjs)
+            var possibleAllies = EntitiesManager.LocalTeam.Where(x => !x.IsLocalPlayer 
+            && !x.Living.IsDead && !x.PhysicsCollision.IsImmaterial);
+
+            var allySpace = useSpaceMode == 0
+                ? possibleAllies.Where(x => x.EnemiesAroundAlive(safeRange) > 0)
+                .OrderByDescending(x => x.EnemiesAroundAlive(safeRange))
+                .ThenBy(x => x.MapObject.ScreenPosition.Distance(InputManager.MousePosition)).FirstOrDefault()
+
+                : possibleAllies.Where(x => x.EnemiesAroundAlive(safeRange) > 0)
+                .OrderBy(x => x.MapObject.ScreenPosition.Distance(InputManager.MousePosition))
+                .ThenBy(x => x.EnemiesAroundAlive(safeRange)).FirstOrDefault();
+
+            if (!useM2FullHP)
             {
-                if (Geometry.CircleVsThickLine(unitPos, unitRadius, enemyProj.StartPosition, enemyProj.CalculatedEndPosition, enemyProj.Radius, false))
+                possibleAllies = possibleAllies.Where(x => x.Living.Health < x.Living.MaxRecoveryHealth);
+            }
+
+            var allyM2 = TargetSelector.GetTarget(possibleAllies, TargetingMode.NearMouse, M2Range);
+
+            var isCastingOrChanneling = LucieHero.AbilitySystem.IsCasting || LucieHero.IsChanneling;
+
+            if (isCastingOrChanneling && LastAbilityFired == null)
+            {
+                LastAbilityFired = CastingIndexToSlot(LucieHero.AbilitySystem.CastingAbilityIndex);
+            }
+
+            if (isCastingOrChanneling)
+            {
+                LocalPlayer.EditAimPosition = true;
+
+                switch (LastAbilityFired)
                 {
-                    closestProj = enemyProj;
-                    return true;
+                    case AbilitySlot.Ability3:
+                        if (allySpace != null)
+                        {
+                            LocalPlayer.Aim(allySpace.MapObject.Position);
+                        }
+                        break;
+
+                    case AbilitySlot.Ability2:
+                        if (allyM2 != null)
+                        {
+                            var pred = TestPrediction.GetNormalLinePrediction(MyPos, allyM2, M2Range, M2Speed, M2Radius, true);
+                            if (pred.CanHit)
+                            {
+                                LocalPlayer.Aim(pred.CastPosition);
+                            }
+                        }
+                        else
+                        {
+                            LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                LocalPlayer.EditAimPosition = false;
+                LastAbilityFired = null;
+            }
+
+            if (useSpace && MiscUtils.CanCast(AbilitySlot.Ability3))
+            {
+                if (LastAbilityFired == null && allySpace != null)
+                {
+                    LocalPlayer.PressAbility(AbilitySlot.Ability3, true);
+                    LocalPlayer.EditAimPosition = true;
+                    LocalPlayer.Aim(allySpace.MapObject.Position);
+                    return;
                 }
             }
 
-            closestProj = null;
-            return false;
+            if (useM2 && MiscUtils.CanCast(AbilitySlot.Ability2))
+            {
+                if (LastAbilityFired == null && allyM2 != null)
+                {
+                    var pred = TestPrediction.GetNormalLinePrediction(MyPos, allyM2, M2Range, M2Speed, M2Radius, true);
+                    if (pred.CanHit)
+                    {
+                        LocalPlayer.PressAbility(AbilitySlot.Ability2, true);
+                        LocalPlayer.EditAimPosition = true;
+                        LocalPlayer.Aim(pred.CastPosition);
+                    }
+                    return;
+                }
+            }
         }
 
-        //private static void KaanDebug(string message)
-        //{
-        //    if (_debugMode && DebugMenu.GetBoolean("debug.abilityUsage"))
-        //    {
-        //        Logs.Info("[PipKaan Debug] " + message);
-        //    }
-        //}
+        private static void HealSelf()
+        {
+            var useM2 = HealMenu.GetBoolean("heal.useM2");
+            var useM2FullHP = HealMenu.GetBoolean("heal.useM2.fullHP");
+            var useSpace = HealMenu.GetBoolean("heal.useSpace");
+            var safeRange = HealMenu.GetSlider("heal.allySafeRange");
+
+            var shouldM2 = useM2 && (useM2FullHP || LucieHero.Living.Health < LucieHero.Living.MaxRecoveryHealth);
+            var shouldSpace = useSpace && LucieHero.EnemiesAroundAlive(safeRange) > 0;
+
+            var isCastingOrChanneling = LucieHero.AbilitySystem.IsCasting || LucieHero.IsChanneling;
+
+            if (isCastingOrChanneling && LastAbilityFired == null)
+            {
+                LastAbilityFired = CastingIndexToSlot(LucieHero.AbilitySystem.CastingAbilityIndex);
+            }
+
+            if (isCastingOrChanneling)
+            {
+                LocalPlayer.EditAimPosition = true;
+
+                switch (LastAbilityFired)
+                {
+                    case AbilitySlot.Ability3:
+                    case AbilitySlot.Ability2:
+                        LocalPlayer.Aim(LucieHero.MapObject.Position);
+                        break;
+                }
+            }
+            else
+            {
+                LocalPlayer.EditAimPosition = false;
+                LastAbilityFired = null;
+            }
+
+            if (shouldSpace && MiscUtils.CanCast(AbilitySlot.Ability3) && LastAbilityFired == null)
+            {
+                LocalPlayer.PressAbility(AbilitySlot.Ability3, true);
+            }
+
+            if (shouldM2 && MiscUtils.CanCast(AbilitySlot.Ability2) && LastAbilityFired == null)
+            {
+                LocalPlayer.PressAbility(AbilitySlot.Ability2, true);
+            }
+        }
+
+        private static void OnDraw(EventArgs args)
+        {
+            if (!Game.IsInGame)
+            {
+                return;
+            }
+
+            if (LucieHero.Living.IsDead)
+            {
+                return;
+            }
+
+            Drawing.DrawString(new Vector2(1920f / 2f, 1080f / 2f - 5f).ScreenToWorld(),
+                "Targeting mode: " + (KeysMenu.GetKeybind("keys.changeTargeting") ? "LowestHealth" : "NearMouse"), UnityEngine.Color.yellow);
+
+            if (DrawingsMenu.GetBoolean("draw.healSafeRange"))
+            {
+                var allyTargets = EntitiesManager.LocalTeam.Where(x => !x.Living.IsDead);
+
+                foreach (var ally in allyTargets)
+                {
+                    Drawing.DrawCircle(ally.MapObject.Position, HealMenu.GetSlider("heal.allySafeRange"), UnityEngine.Color.green);
+                }
+            }
+
+            if (DrawingsMenu.GetBoolean("draw.rangeR.safeRange"))
+            {
+                var rSafeRange = ComboMenu.GetSlider("combo.useR.safeRange");
+
+                Drawing.DrawCircle(MyPos, rSafeRange, UnityEngine.Color.magenta);
+            }
+        }
 
         public void OnUnload()
         {

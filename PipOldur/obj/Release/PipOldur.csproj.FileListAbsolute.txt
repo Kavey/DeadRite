@@ -1,0 +1,5 @@
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipOldur\obj\Release\PipOldur.csprojResolveAssemblyReference.cache
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipOldur\bin\Release\PipOldur.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipOldur\bin\Release\PipOldur.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipOldur\obj\Release\PipOldur.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipOldur\obj\Release\PipOldur.pdb

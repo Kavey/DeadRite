@@ -11,3 +11,6 @@ C:\Users\skaaz\Desktop\HoyerVaresh\obj\Release\HoyerVaresh.pdb
 C:\Users\skaaz\Desktop\1BR\HoyerVareshNoCancel\obj\Release\HoyerVaresh.csprojResolveAssemblyReference.cache
 C:\Users\skaaz\Desktop\1BR\HoyerVareshNoCancel\obj\Release\HoyerVaresh.dll
 C:\Users\skaaz\Desktop\1BR\HoyerVareshNoCancel\obj\Release\HoyerVaresh.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\HoyerVareshNoCancel\obj\Release\HoyerVaresh.csprojResolveAssemblyReference.cache
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\HoyerVareshNoCancel\obj\Release\HoyerVaresh.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\HoyerVareshNoCancel\obj\Release\HoyerVaresh.pdb

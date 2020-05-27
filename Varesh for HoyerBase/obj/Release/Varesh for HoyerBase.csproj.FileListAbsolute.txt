@@ -1,0 +1,10 @@
+C:\Users\Shadow\Desktop\BRiteProfiles\Varesh for HoyerBase\bin\Release\HoyerVaresh.dll
+C:\Users\Shadow\Desktop\BRiteProfiles\Varesh for HoyerBase\bin\Release\HoyerVaresh.pdb
+C:\Users\Shadow\Desktop\BRiteProfiles\Varesh for HoyerBase\obj\Release\HoyerVaresh.dll
+C:\Users\Shadow\Desktop\BRiteProfiles\Varesh for HoyerBase\obj\Release\HoyerVaresh.pdb
+C:\Users\Shadow\Desktop\BRiteProfiles\Varesh for HoyerBase\obj\Release\Varesh for HoyerBase.csprojResolveAssemblyReference.cache
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Varesh for HoyerBase\obj\Release\Varesh for HoyerBase.csprojResolveAssemblyReference.cache
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Varesh for HoyerBase\obj\Release\HoyerVaresh.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Varesh for HoyerBase\obj\Release\HoyerVaresh.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Varesh for HoyerBase\bin\Release\HoyerVaresh.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Varesh for HoyerBase\bin\Release\HoyerVaresh.pdb

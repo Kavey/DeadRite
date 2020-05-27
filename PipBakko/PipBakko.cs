@@ -280,23 +280,28 @@ namespace PipKaan
             var targetModeKey = KeysMenu.GetKeybind("keys.changeTargeting");
             var targetMode = TargetingMode.NearMouse;
 
-            var invisibleTargets = ComboMenu.GetBoolean("combo.invisibleTargets");
+            var enemiesToTargetBase = EntitiesManager.EnemyTeam.Where(x => x.IsValid && !x.Living.IsDead
+            && !x.HasBuff("OtherSideBuff") && !x.HasBuff("AscensionBuff") && !x.HasBuff("AscensionTravelBuff") &&
+            !x.HasBuff("Fleetfoot") && !x.HasBuff("TempestRushBuff") && !x.HasBuff("ValiantLeap") && !x.HasBuff("FrogLeap") &&
+            !x.HasBuff("FrogLeapRecast") && !x.HasBuff("ElusiveStrikeCharged") && !x.HasBuff("ElusiveStrikeWall2") && 
+            !x.HasBuff("BurrowAlternate") && !x.HasBuff("JetPack") && !x.HasBuff("ProwlBuff") && !x.HasBuff("Dive") &&
+            !x.HasBuff("InfestingBuff") && !x.HasBuff("PortalBuff"));
 
-            var enemiesToTarget = EntitiesManager.EnemyTeam.Where(x => x.IsValid && !x.Living.IsDead
-            && !x.PhysicsCollision.IsImmaterial && !x.IsCountering && !x.HasShield() && !x.HasConsumeBuff && !x.HasParry());
-
-            if (!invisibleTargets)
+            if (!ComboMenu.GetBoolean("combo.invisibleTargets"))
             {
-                enemiesToTarget = enemiesToTarget.Where(x => !x.CharacterModel.IsModelInvisible);
+                enemiesToTargetBase = enemiesToTargetBase.Where(x => !x.CharacterModel.IsModelInvisible);
             }
 
-            var M1Target = TargetSelector.GetTarget(enemiesToTarget, targetMode, M1Range);
-            var M2Target = TargetSelector.GetTarget(enemiesToTarget, targetMode, M2Range);
-            var SpaceTarget = TargetSelector.GetTarget(enemiesToTarget, targetMode, SpaceMaxRange);
-            var ETarget = TargetSelector.GetTarget(enemiesToTarget, targetMode, TrueERange);
-            var RTarget = TargetSelector.GetTarget(enemiesToTarget, targetMode, RRange);
-            var F_M2Target = TargetSelector.GetTarget(enemiesToTarget, targetMode, F_M2Range);
-			var FTarget = TargetSelector.GetTarget(enemiesToTarget, targetMode, FRange);
+            var enemiesToTargetProjs = enemiesToTargetBase.Where(x =>
+            !x.IsCountering && !x.HasShield() && !x.HasConsumeBuff && !x.HasParry() && !x.HasBuff("ElectricShield"));
+
+            var M1Target = TargetSelector.GetTarget(enemiesToTargetProjs, targetMode, M1Range);
+            var M2Target = TargetSelector.GetTarget(enemiesToTargetProjs, targetMode, M2Range);
+            var SpaceTarget = TargetSelector.GetTarget(enemiesToTargetBase, targetMode, SpaceMaxRange);
+            var ETarget = TargetSelector.GetTarget(enemiesToTargetProjs, targetMode, TrueERange);
+            var RTarget = TargetSelector.GetTarget(enemiesToTargetProjs, targetMode, RRange);
+            var F_M2Target = TargetSelector.GetTarget(enemiesToTargetProjs, targetMode, F_M2Range);
+			var FTarget = TargetSelector.GetTarget(enemiesToTargetBase, targetMode, FRange);
 
             var isCastingOrChanneling = KaanHero.AbilitySystem.IsCasting || KaanHero.IsChanneling || KaanHero.HasBuff("BulwarkBuff");
 

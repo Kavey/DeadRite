@@ -1,10 +1,5 @@
-C:\Users\skaaz\Desktop\PipShifu\bin\Release\PipKaan.dll
-C:\Users\skaaz\Desktop\PipShifu\bin\Release\PipKaan.pdb
-C:\Users\skaaz\Desktop\PipShifu\obj\Release\PipKaan.dll
-C:\Users\skaaz\Desktop\PipShifu\obj\Release\PipKaan.pdb
-C:\Users\skaaz\Desktop\PipShifu\obj\Release\PipShifu.csprojResolveAssemblyReference.cache
-C:\Users\skaaz\Desktop\1BR\PipShifu\bin\Release\PipShifu.dll
-C:\Users\skaaz\Desktop\1BR\PipShifu\bin\Release\PipShifu.pdb
-C:\Users\skaaz\Desktop\1BR\PipShifu\obj\Release\PipShifu.csprojResolveAssemblyReference.cache
-C:\Users\skaaz\Desktop\1BR\PipShifu\obj\Release\PipShifu.dll
-C:\Users\skaaz\Desktop\1BR\PipShifu\obj\Release\PipShifu.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipShifu\bin\Release\PipShifu.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipShifu\bin\Release\PipShifu.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipShifu\obj\Release\PipShifu.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipShifu\obj\Release\PipShifu.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipShifu\obj\Release\PipShifu.csprojResolveAssemblyReference.cache

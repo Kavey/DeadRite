@@ -1,0 +1,5 @@
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipRook\bin\Release\PipRook.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipRook\bin\Release\PipRook.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipRook\obj\Release\PipRook.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipRook\obj\Release\PipRook.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipRook\obj\Release\PipRook.csprojResolveAssemblyReference.cache

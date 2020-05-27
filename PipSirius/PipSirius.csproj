@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7AA709D9-14F8-423A-905F-20C3F1A2B07C}</ProjectGuid>
+    <ProjectGuid>{B584B317-EC93-4017-B524-B8E734B86B3B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PipSirius</RootNamespace>
@@ -31,16 +31,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="BattleRight.Core">
-      <HintPath>..\..\love\System\BattleRight.Core.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\BRight\Release\System\BattleRight.Core.dll</HintPath>
     </Reference>
     <Reference Include="BattleRight.Helper">
-      <HintPath>..\..\love\System\BattleRight.Helper.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\BRight\Release\System\BattleRight.Helper.dll</HintPath>
     </Reference>
     <Reference Include="BattleRight.Sandbox">
-      <HintPath>..\..\love\System\BattleRight.Sandbox.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\BRight\Release\System\BattleRight.Sandbox.dll</HintPath>
     </Reference>
     <Reference Include="BattleRight.SDK">
-      <HintPath>..\..\love\System\BattleRight.SDK.dll</HintPath>
+      <HintPath>..\..\..\..\Desktop\BRight\Release\System\BattleRight.SDK.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

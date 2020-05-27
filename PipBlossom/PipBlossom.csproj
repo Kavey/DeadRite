@@ -4,7 +4,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7AA709D9-14F8-423A-905F-20C3F1A2B07C}</ProjectGuid>
+    <ProjectGuid>{45451A89-59AE-4A7D-BB34-A4FAACB3A3C6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>PipBlossom</RootNamespace>
