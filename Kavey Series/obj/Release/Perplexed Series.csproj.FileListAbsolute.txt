@@ -1,0 +1,5 @@
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Perplexed Series\Perplexed Series\bin\Release\Perplexed Series.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Perplexed Series\Perplexed Series\bin\Release\Perplexed Series.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Perplexed Series\Perplexed Series\obj\Release\Perplexed Series.csprojResolveAssemblyReference.cache
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Perplexed Series\Perplexed Series\obj\Release\Perplexed Series.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Perplexed Series\Perplexed Series\obj\Release\Perplexed Series.pdb

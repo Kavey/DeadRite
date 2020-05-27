@@ -1,0 +1,2 @@
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Kavey Series\obj\Debug\Kavey Series.csprojAssemblyReference.cache
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Kavey Series\obj\Debug\Kavey Series.csproj.CoreCompileInputs.cache

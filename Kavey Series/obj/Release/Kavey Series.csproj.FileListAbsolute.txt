@@ -1,0 +1,9 @@
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Kavey Series\Kavey Series\bin\Release\Kavey Series.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Kavey Series\Kavey Series\bin\Release\Kavey Series.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Kavey Series\Kavey Series\obj\Release\Kavey Series.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Kavey Series\Kavey Series\obj\Release\Kavey Series.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Kavey Series\bin\Release\Kavey Series.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Kavey Series\bin\Release\Kavey Series.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Kavey Series\obj\Release\Kavey Series.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Kavey Series\obj\Release\Kavey Series.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\Kavey Series\obj\Release\Kavey Series.csprojResolveAssemblyReference.cache
