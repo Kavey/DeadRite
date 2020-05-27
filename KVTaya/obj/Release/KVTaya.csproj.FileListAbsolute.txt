@@ -1,5 +1,0 @@
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVTaya\bin\Release\KVTaya.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVTaya\bin\Release\KVTaya.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVTaya\obj\Release\KVTaya.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVTaya\obj\Release\KVTaya.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVTaya\obj\Release\KVTaya.csprojResolveAssemblyReference.cache

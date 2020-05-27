@@ -1,5 +1,0 @@
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipUlric\bin\Release\PipUlric.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipUlric\bin\Release\PipUlric.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipUlric\obj\Release\PipUlric.csprojResolveAssemblyReference.cache
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipUlric\obj\Release\PipUlric.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipUlric\obj\Release\PipUlric.pdb

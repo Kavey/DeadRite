@@ -1,5 +1,0 @@
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipAlysia\bin\Release\PipAlysia.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipAlysia\bin\Release\PipAlysia.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipAlysia\obj\Release\PipAlysia.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipAlysia\obj\Release\PipAlysia.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipAlysia\obj\Release\PipAlysia.csprojResolveAssemblyReference.cache

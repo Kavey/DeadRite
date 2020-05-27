@@ -1,5 +1,0 @@
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipTaya\bin\Release\PipTaya.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipTaya\bin\Release\PipTaya.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipTaya\obj\Release\PipTaya.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipTaya\obj\Release\PipTaya.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipTaya\obj\Release\PipTaya.csprojResolveAssemblyReference.cache

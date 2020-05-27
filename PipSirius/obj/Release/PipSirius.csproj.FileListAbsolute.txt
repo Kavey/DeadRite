@@ -1,5 +1,0 @@
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipSirius\bin\Release\PipSirius.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipSirius\bin\Release\PipSirius.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipSirius\obj\Release\PipSirius.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipSirius\obj\Release\PipSirius.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipSirius\obj\Release\PipSirius.csprojResolveAssemblyReference.cache
