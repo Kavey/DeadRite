@@ -165,7 +165,7 @@ namespace Kavey_Series.Champions
 
         public void InitializeAbilities()
         {
-            M1 = new Ability(AbilityKey.M1, 7.6f, 0.25f, 22f);
+            M1 = new Ability(AbilityKey.M1, 7.6f, 22f, 0.25f);
             M2 = new Ability(AbilityKey.M2, 9f, 28f, 0.75f);
             EX1 = new Ability(AbilityKey.EX1);
             EX2 = new Ability(AbilityKey.EX2);
@@ -292,7 +292,7 @@ namespace Kavey_Series.Champions
 
             var M2SafeRange = Healing.GetSlider("healing.useM2.safeRange");
             var TastyFishHeal = 10;
-            var M2Heal = 16;
+            var M2Heal = 21;
 
             var alliesToTargetE =
                 alliesToTargetHeal.Where(x => x.Living.Health <= x.Living.MaxRecoveryHealth - TastyFishHeal);
