@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Eventing.Reader;
 using System.Linq;
+using System.Net.NetworkInformation;
 // using System.Text;
 using BattleRight.Core;
 using BattleRight.Core.Enumeration;
@@ -24,7 +25,7 @@ using Ability = Kavey_Series.Abilities.Ability;
 
 namespace Kavey_Series.Champions
 {
-    class Ulric : IChampion
+    internal class Ulric : IChampion
     {
         public bool Initialized { get; set; }
         public string ChampionName { get; set; } = "Ulric";
@@ -45,29 +46,6 @@ namespace Kavey_Series.Champions
         public Menu AntiGapclosing { get; set; }
         public Menu Misc { get; set; }
         public Menu Drawings { get; set; }
-
-        // internal MenuComboBox ComboOrder;
-
-        // public string InsertBeforeUpperCase(string str, string toInsert)
-        // {
-        //     var sb = new StringBuilder();
-        //
-        //     var previousChar = char.MinValue;
-        //
-        //     foreach (var c in str)
-        //     {
-        //         if (char.IsUpper(c))
-        //             if (sb.Length != 0 && previousChar != ' ')
-        //                 foreach (var t in toInsert)
-        //                     sb.Append(t);
-        //
-        //         sb.Append(c);
-        //
-        //         previousChar = c;
-        //     }
-        //
-        //     return sb.ToString();
-        // }
 
         private static Character HeroPlayer => LocalPlayer.Instance;
         // private static bool IsAntiGapclosing;
@@ -112,6 +90,7 @@ namespace Kavey_Series.Champions
                 InitializeMenu();
                 InitializeAbilities();
             }
+
             // AntiGapcloser.OnGapcloser += AntiGapcloser_OnGapcloser;
             Game.OnUpdate += Game_OnUpdate;
             Game.OnDraw += Game_OnDraw;
@@ -127,32 +106,27 @@ namespace Kavey_Series.Champions
             //Keys
             {
                 Keys = new Menu("ulric.keys", "Keys", true);
-                Keys.Add(new MenuKeybind("keys.combo", "Combo Key", KeyCode.Mouse0));
+                Keys.Add(new MenuKeybind("keys.combo", "Combo Key", KeyCode.Y));
                 Keys.Add(new MenuKeybind("keys.healSelf", "Heal self", KeyCode.LeftControl));
                 Keys.Add(new MenuCheckBox("keys.autoCombo", "Auto Combo Mode", true));
                 Keys.Add(new MenuKeybind("keys.M1", "Left Mouse keybind to pause Auto Combo", KeyCode.Mouse2));
                 Keys.Add(new MenuKeybind("keys.M2", "Right Mouse keybind to pause Auto Combo", KeyCode.Mouse1));
                 Keys.Add(new MenuKeybind("keys.Space", "Space keybind to pause Auto Combo", KeyCode.Space));
                 Keys.Add(new MenuKeybind("keys.EX1", "EX1 keybind to pause Auto Combo", KeyCode.T));
-
             }
             //Combo
             {
                 Combo = new Menu("ulric.combo", "Combo", true);
                 // Combo.Add(new MenuSlider("combo.autoSafeRange", "Auto Combo safe range", 2f, 10f, 0f));
                 Combo.Add(new MenuCheckBox("combo.invisible", "Attack invisible enemies", true));
-                // ComboOrder = Combo.Add(new MenuComboBox("combo.order", "Combo Target Order", 1,
-                //     Enum.GetNames(typeof(TargetingOrder))
-                //         .Select(s => InsertBeforeUpperCase(s, " > ")).ToArray()));
                 Combo.Add(new MenuCheckBox("combo.useM1", "Use Left Mouse", true));
                 Combo.Add(new MenuCheckBox("combo.interruptM1", " ^ Interrupt Left Mouse if needed", true));
                 // Combo.Add(new MenuSlider("combo.useM1.safeRange", "    ^ Safe range", 2.5f, 5f, 0f));
                 Combo.Add(new MenuCheckBox("combo.useE", "Use E", true));
+                Combo.Add(new MenuCheckBox("combo.cancelE", " ^ Cancel E if no target", true));
                 Combo.Add(new MenuCheckBox("combo.useR", "Use R", false));
                 Combo.Add(new MenuCheckBox("combo.useRS", " ^ Only to reset Space CD regardless min energy", false));
                 Combo.Add(new MenuIntSlider("combo.useR.minEnergyBars", "    ^ Min energy bars", 3, 4, 1));
-                // Combo.Add(new MenuCheckBox("combo.useEX1", "Use EX1", true));
-                // Combo.Add(new MenuIntSlider("combo.useEX1.minEnergyBars", "    ^ Min energy bars", 3, 4, 1));
                 Combo.Add(new MenuCheckBox("combo.useF", "Use F", true));
             }
             //Healing
@@ -200,10 +174,10 @@ namespace Kavey_Series.Champions
         public void InitializeAbilities()
         {
             M1 = new Ability(AbilityKey.M1, 2.5f);
-            M2 = new Ability(AbilityKey.M2, 10f, 28f, 0.75f);
+            M2 = new Ability(AbilityKey.M2, 9f, 28f, 0.75f);
             EX1 = new Ability(AbilityKey.EX1, 9f, 22.5f, 0.3f);
             EX2 = new Ability(AbilityKey.EX2, 4.25f);
-            Space = new Ability(AbilityKey.Space, 6f, 22.5f, 0.3f);
+            Space = new Ability(AbilityKey.Space, 7f, 22.5f, 0.3f);
             Q = new Ability(AbilityKey.Q, 9f, 25.5f, 0.3f);
             E = new Ability(AbilityKey.E, 8.5f, 21.5f, 0.3f);
             R = new Ability(AbilityKey.R, 6f, 22.5f, 0.45f);
@@ -214,27 +188,18 @@ namespace Kavey_Series.Champions
         {
             get
             {
-                List<Battlerite> Battlerites = new List<Battlerite>(5);
-                if (Battlerites.Any())
-                {
-                    Battlerites.Clear();
-                }
-        
+                var Battlerites = new List<Battlerite>(5);
+                if (Battlerites.Any()) Battlerites.Clear();
+
                 for (var i = 0; i < 5; i++)
                 {
                     var br = HeroPlayer.BattleriteSystem.GetEquippedBattlerite(i);
-                    if (br != null)
-                    {
-                        Battlerites.Add(br);
-                    }
+                    if (br != null) Battlerites.Add(br);
                 }
-        
+
                 var Vindicator = Battlerites.Any(x => x.Name.Equals("VindicatorUpgrade"));
-                if (Vindicator)
-                {
-                    return true;
-                }
-        
+                if (Vindicator) return true;
+
                 return false;
             }
         }
@@ -244,114 +209,41 @@ namespace Kavey_Series.Champions
             Initialize();
         }
 
-        // private static void OnCreate(InGameObject inGameObject)
-        // {
-        //     Console.WriteLine(inGameObject.ObjectName + " of type " + inGameObject.GetType() + " created");
-        //
-        // }
-        //
-        // private static void OnDestroy(InGameObject inGameObject)
-        // {
-        //     Console.WriteLine(inGameObject.ObjectName + " of type " + inGameObject.GetType() + " destroyed");
-        // }
-
-        // private void AntiGapcloser_OnGapcloser(AntiGapcloser.GapcloseEventArgs args)
-        // {
-        //     //
-        // }
-
         private void Game_OnDraw(EventArgs args)
         {
-            if (!Game.IsInGame)
-            {
-                return;
-            }
+            if (!Game.IsInGame) return;
 
-            if (HeroPlayer.Living.IsDead)
-            {
-                return;
-            }
+            if (HeroPlayer.Living.IsDead) return;
 
-            if (HeroPlayer.IsMounted)
-            {
-                Drawing.DrawString(new Vector2(1920f / 2f, (1080f / 2f) - 45f).ScreenToWorld(),
-                    "Nice mount bro :^)", Color.yellow);
-            }
+            if (Drawings.GetBoolean("draw.rangeM1.safeRange")) Drawing.DrawCircle(Utility.MyPos, M1.Range, Color.white);
 
-            if (!Game.IsInRoundPhase)
-            {
-                Drawing.DrawString(new Vector2(1920f / 2f, (1080f / 2f) - 5f).ScreenToWorld(),
-                    "don't feed :-)", Color.white);
-            }
-
-            if (Drawings.GetBoolean("draw.rangeM1.safeRange"))
-            {
-                Drawing.DrawCircle(Utility.MyPos, M1.Range, Color.white);
-            }
-
-            if (Drawings.GetBoolean("draw.Target"))
-            {
-                Drawing.DrawCircle(LocalPlayer.AimPosition, 1f, Color.red);
-            }
+            if (Drawings.GetBoolean("draw.Target")) Drawing.DrawCircle(LocalPlayer.AimPosition, 1f, Color.red);
         }
 
         private void Game_OnUpdate(EventArgs args)
         {
             if (!Game.IsInRoundPhase)
                 //|| HeroPlayer.IsMounted
-            {
                 return;
-            }
 
             if (Keys.GetBoolean("keys.autoCombo") &&
                 Keys.GetKeybind("keys.M1") || Keys.GetKeybind("keys.M2") || Keys.GetKeybind("keys.Space") ||
-                 Keys.GetKeybind("keys.EX1"))
+                Keys.GetKeybind("keys.EX1"))
             {
                 LocalPlayer.EditAimPosition = false;
                 CastingAbility = null;
                 return;
             }
 
-            // Orbs object name:
-            //RiteOfMap6Object / RiteOfMap7Object / RiteOfBonesObject...
-            //
-            // var orb = EntitiesManager.CenterOrb;
-            // if (orb == null)
-            // {
-            //     Console.WriteLine("Orb status:" + orb.ObjectName);
-            //     var orbHealth = orb.Get<LivingObject>().Health;
-            //     var orbPos = orb.Get<MapGameObject>().Position;
-            //
-            //     Drawing.DrawCircle(orbPos, 1.5f, Color.green);
-            //
-            //     if (orbHealth <= 0)
-            //     {
-            //         return;
-            //     }
-            //
-            //     if (HeroPlayer.Distance(orbPos) <= M1.Range)
-            //     {
-            //         if (M1.CanCast)
-            //         {
-            //             LocalPlayer.PressAbility(M1.Slot, true);
-            //             CastingAbility = M1;
-            //         }
-            //     }
-            //     return;
-            // }
-
-            var enemiesToTargetBase = EntitiesManager.EnemyTeam.Where(x => x.IsValid && !x.Living.IsDead && 
-                !x.HasBuff("OtherSideBuff") && !x.HasBuff("AscensionBuff") && !x.HasBuff("AscensionTravelBuff") && !x.HasBuff("Fleetfoot") &&
-                !x.HasBuff("TempestRushBuff") && !x.HasBuff("ValiantLeap") && !x.HasBuff("FrogLeap") && !x.HasBuff("FrogLeapRecast") &&
-                !x.HasBuff("ElusiveStrikeCharged") && !x.HasBuff("ElusiveStrikeWall2") && !x.HasBuff("BurrowAlternate") &&
-                !x.HasBuff("JetPack") && !x.HasBuff("ProwlBuff") && !x.HasBuff("Dive") && !x.HasBuff("InfestingBuff") &&
-                !x.HasBuff("PortalBuff") && !x.HasBuff("CrushingBlow") && !x.HasBuff("TornadoBuff") && !x.HasBuff("LawBringerInAir") &&
-                !x.HasBuff("LawBringerLeap"));
+            var enemiesToTargetBase = EntitiesManager.EnemyTeam.Where(x => x.IsValid && !x.Living.IsDead && !x.HasBuff("OtherSideBuff") &&
+                !x.HasBuff("AscensionBuff") && !x.HasBuff("AscensionTravelBuff") && !x.HasBuff("Fleetfoot") && !x.HasBuff("TempestRushBuff") &&
+                !x.HasBuff("ValiantLeap") &&!x.HasBuff("FrogLeap") && !x.HasBuff("FrogLeapRecast") && !x.HasBuff("ElusiveStrikeCharged") &&
+                !x.HasBuff("ElusiveStrikeWall2") && !x.HasBuff("BurrowAlternate") && !x.HasBuff("JetPack") && !x.HasBuff("ProwlBuff") &&
+                !x.HasBuff("Dive") && !x.HasBuff("InfestingBuff") && !x.HasBuff("PortalBuff") && !x.HasBuff("CrushingBlow") &&
+                !x.HasBuff("TornadoBuff") && !x.HasBuff("LawBringerInAir") && !x.HasBuff("LawBringerLeap"));
 
             if (!Combo.GetBoolean("combo.invisible"))
-            {
                 enemiesToTargetBase = enemiesToTargetBase.Where(x => !x.CharacterModel.IsModelInvisible);
-            }
 
             var alliesToTargetBase =
                 EntitiesManager.LocalTeam.Where(x => !x.Living.IsDead && !x.PhysicsCollision.IsImmaterial);
@@ -378,42 +270,38 @@ namespace Kavey_Series.Champions
             var enemiesToExecuteEX1 = enemiesToTargetProjs.Where(x => x.Living.Health <= EX1Damage);
 
             var selfToTargetM2 = selfToTargetHeal.Where(x => x.Living.Health <= x.Living.MaxRecoveryHealth - M2Heal);
-            var alliesToTargetM2 = alliesToTargetHeal.Where(x => x.Living.Health <= x.Living.MaxRecoveryHealth - M2Heal);
-            var alliesToTargetSpace = 
+            var alliesToTargetM2 =
+                alliesToTargetHeal.Where(x => x.Living.Health <= x.Living.MaxRecoveryHealth - M2Heal);
+            var alliesToTargetSpace =
                 alliesToTargetHeal.Where(x => !x.HasBuff("Lightbringer") &&
                                               (x.Living.Health <= x.Living.MaxRecoveryHealth - SpaceHeal ||
-                                               HeroPlayer.Living.Health <= HeroPlayer.Living.MaxRecoveryHealth - SpaceHeal));
+                                               HeroPlayer.Living.Health <=
+                                               HeroPlayer.Living.MaxRecoveryHealth - SpaceHeal));
             var alliesToTargetEX1 = alliesToTargetSpace.Where(x => x.Distance(HeroPlayer) > Space.Range);
-            var alliesToTargetEX2 = alliesToTargetBase.Where(x => x.Living.Health <= x.Living.MaxRecoveryHealth - EX2Heal);
+            var alliesToTargetEX2 =
+                alliesToTargetBase.Where(x => x.Living.Health <= x.Living.MaxRecoveryHealth - EX2Heal);
 
             var CrushingBlowRange = 3.75f;
             var BurrowRange = 2.5f;
             var enemiesToaAntiJump =
                 EntitiesManager.EnemyTeam.Where(x => (x.HasBuff("CrushingBlow") || x.HasBuff("BurrowAlternate"))
-                    && (x.Distance(HeroPlayer) <= CrushingBlowRange || x.Distance(HeroPlayer) <= BurrowRange));
+                                                     && (x.Distance(HeroPlayer) <= CrushingBlowRange ||
+                                                         x.Distance(HeroPlayer) <= BurrowRange));
 
             // var targetSelf = TargetSelector.GetTarget(alliesSelf, targetMode, 1f);
             var M1Target = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, M1.Range);
             var M2Self = TargetSelector.GetTarget(selfToTargetM2, TargetingMode.NearMouse, M2.Range);
-            var M2Allies = TargetSelector.GetTarget(alliesToTargetM2, TargetingMode.NearMouse, M2.Range);
-            var SpaceAllies = TargetSelector.GetTarget(alliesToTargetSpace, TargetingMode.NearMouse, Space.Range);
-            var SpaceExecute = TargetSelector.GetTarget(enemiesToExecuteSpace, TargetingMode.NearMouse, Space.Range);
+            var M2Allies = TargetSelector.GetTarget(alliesToTargetM2, TargetingMode.LowestHealth, M2.Range);
+            var SpaceAllies = TargetSelector.GetTarget(alliesToTargetSpace, TargetingMode.Closest, Space.Range);
+            var SpaceExecute = TargetSelector.GetTarget(enemiesToExecuteSpace, TargetingMode.LowestHealth, Space.Range);
             var QTarget = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, Q.Range);
             var ETarget = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, E.Range);
             var RTarget = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, R.Range);
             var RAntiJump = TargetSelector.GetTarget(enemiesToaAntiJump, TargetingMode.NearMouse, R.Range);
-            var FTarget = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, F.Range);
-            var EX1Allies = TargetSelector.GetTarget(alliesToTargetEX1, TargetingMode.NearMouse, EX1.Range);
-            var EX1Execute = TargetSelector.GetTarget(enemiesToExecuteEX1, TargetingMode.NearMouse, EX1.Range);
-            var EX2Allies = TargetSelector.GetTarget(alliesToTargetEX2, TargetingMode.NearMouse, EX2.Range);
-            
-            //Doing nothing if in Shield
-            // if (HeroPlayer.HasBuff("DivineShieldBuff"))
-            // {
-            //     LocalPlayer.EditAimPosition = false;
-            //     CastingAbility = null;
-            //     return;
-            // }
+            var FTarget = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.LowestHealth, F.Range);
+            var EX1Allies = TargetSelector.GetTarget(alliesToTargetEX1, TargetingMode.Closest, EX1.Range);
+            var EX1Execute = TargetSelector.GetTarget(enemiesToExecuteEX1, TargetingMode.LowestHealth, EX1.Range);
+            var EX2Allies = TargetSelector.GetTarget(alliesToTargetEX2, TargetingMode.Closest, EX2.Range);
 
             //Self Healing
             if (Keys.GetKeybind("keys.healSelf") && !Healing.GetBoolean("healing.autohealSelf"))
@@ -434,7 +322,8 @@ namespace Kavey_Series.Champions
                     CastingAbility = null;
                 }
 
-                if (M2.CanCast && CastingAbility == null && HeroPlayer.Living.Health <= HeroPlayer.Living.MaxRecoveryHealth - M2Heal / 2)
+                if (M2.CanCast && CastingAbility == null &&
+                    HeroPlayer.Living.Health <= HeroPlayer.Living.MaxRecoveryHealth - M2Heal / 2)
                 {
                     LocalPlayer.PressAbility(M2.Slot, true);
                     CastingAbility = M2;
@@ -454,14 +343,16 @@ namespace Kavey_Series.Champions
 
                     if (QTarget != null && HeroPlayer.HasBuff("DivineShieldBuff"))
                     {
-                        var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, QTarget, Q.Range, Q.Speed, Q.Radius);
+                        var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, QTarget, Q.Range, Q.Speed,
+                            Q.Radius);
                         if (pred.CanHit)
                             LocalPlayer.Aim(pred.CastPosition);
                     }
 
                     if (RTarget != null && HeroPlayer.HasBuff("LawBringerLeap"))
                     {
-                        var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, RTarget, R.Range, R.Speed, R.Radius);
+                        var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, RTarget, R.Range, R.Speed,
+                            R.Radius);
                         if (pred.CanHit)
                             LocalPlayer.Aim(pred.CastPosition);
                         else
@@ -483,22 +374,22 @@ namespace Kavey_Series.Champions
                     }
 
                     var SpaceCD = LocalPlayer.GetAbilityHudData(AbilitySlot.Ability3);
-                    if (RTarget != null && (R.CanCast || HeroPlayer.HasBuff("LawBringerLeap")) && SpaceCD.CooldownLeft > 4 && HasVindicatorUpgrade
-                        && Combo.GetBoolean("combo.useR") && Combo.GetBoolean("combo.useRS"))
+                    if (RTarget != null && (R.CanCast || HeroPlayer.HasBuff("LawBringerLeap")) &&
+                        SpaceCD.CooldownLeft > 4 && HasVindicatorUpgrade &&
+                        !HeroPlayer.HasBuff("DivineShieldBuff") && Combo.GetBoolean("combo.useR") && Combo.GetBoolean("combo.useRS"))
                     {
+                        var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, RTarget, R.Range, R.Speed,
+                            R.Radius);
+                        if (pred.CanHit)
                         {
-                            var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, RTarget, R.Range, R.Speed, R.Radius);
-                            if (pred.CanHit)
-                            {
-                                LocalPlayer.EditAimPosition = true;
-                                LocalPlayer.Aim(pred.CastPosition);
-                                LocalPlayer.PressAbility(R.Slot, true);
-                                CastingAbility = R;
-                            }
+                            LocalPlayer.EditAimPosition = true;
+                            LocalPlayer.Aim(pred.CastPosition);
+                            LocalPlayer.PressAbility(R.Slot, true);
+                            CastingAbility = R;
                         }
                     }
-                    
-                    if (EX2Allies != null & EX2.CanCast && Healing.GetBoolean("healing.useEX2"))
+
+                    if ((EX2Allies != null) & EX2.CanCast && Healing.GetBoolean("healing.useEX2"))
                     {
                         var energyRequired = Healing.GetIntSlider("healing.useEX2.minEnergyBars") * 25;
                         if (energyRequired <= HeroPlayer.Energized.Energy)
@@ -509,7 +400,7 @@ namespace Kavey_Series.Champions
                         }
                     }
 
-                    if (EX1Allies != null && EX1.CanCast && Healing.GetBoolean("healing.useEX1"))
+                    if (EX1Allies != null && EX1.CanCast && !HeroPlayer.HasBuff("DivineShieldBuff") && Healing.GetBoolean("healing.useEX1"))
                     {
                         var energyRequired = Healing.GetIntSlider("healing.useEX1.minEnergyBars") * 25;
                         if (energyRequired <= HeroPlayer.Energized.Energy)
@@ -520,7 +411,7 @@ namespace Kavey_Series.Champions
                         }
                     }
 
-                    if (SpaceAllies != null && Space.CanCast && Healing.GetBoolean("healing.useSpace"))
+                    if (SpaceAllies != null && Space.CanCast && !HeroPlayer.HasBuff("DivineShieldBuff") && Healing.GetBoolean("healing.useSpace"))
                     {
                         LocalPlayer.PressAbility(Space.Slot, true);
                         CastingAbility = Space;
@@ -534,14 +425,15 @@ namespace Kavey_Series.Champions
                         return;
                     }
 
-                    if (FTarget != null && F.CanCast && Combo.GetBoolean("combo.useF"))
+                    if (FTarget != null && F.CanCast && !HeroPlayer.HasBuff("DivineShieldBuff") && Combo.GetBoolean("combo.useF"))
                     {
                         LocalPlayer.PressAbility(F.Slot, true);
                         CastingAbility = F;
                         return;
                     }
 
-                    if (RTarget != null && R.CanCast && Combo.GetBoolean("combo.useR") && !Combo.GetBoolean("combo.useRS"))
+                    if (RTarget != null && R.CanCast && !HeroPlayer.HasBuff("DivineShieldBuff") && Combo.GetBoolean("combo.useR") &&
+                        !Combo.GetBoolean("combo.useRS"))
                     {
                         var energyRequired = Combo.GetIntSlider("combo.useR.minEnergyBars") * 25;
                         if (energyRequired <= HeroPlayer.Energized.Energy)
@@ -559,20 +451,24 @@ namespace Kavey_Series.Champions
                         return;
                     }
 
-                    if (ETarget != null && M2.CanCast && HeroPlayer.HasBuff("SmiteBuff") && Combo.GetBoolean("combo.useE"))
+                    if (ETarget != null && M2.CanCast && HeroPlayer.HasBuff("SmiteBuff") &&
+                        Combo.GetBoolean("combo.useE"))
                     {
                         LocalPlayer.PressAbility(M2.Slot, true);
                         CastingAbility = M2;
                         return;
                     }
 
-                    if (HeroPlayer.EnemiesAroundAlive(3f) > 0 && E.CanCast && !HeroPlayer.HasBuff("SmiteBuff") && Combo.GetBoolean("combo.useE"))
+                    //Cancel Smite if no target
+                    if (ETarget == null && (M2Self != null || M2Allies != null) && E.CanCast && M2.CanCast &&
+                        HeroPlayer.HasBuff("SmiteBuff") && Combo.GetBoolean("combo.useE") && Combo.GetBoolean("combo.cancelE"))
                     {
                         LocalPlayer.PressAbility(E.Slot, true);
                         CastingAbility = E;
                     }
 
-                    if (M2Self != null && M2.CanCast && !HeroPlayer.HasBuff("SmiteBuff") && !HeroPlayer.HasBuff("DivineShieldBuff") &&
+                    if (M2Self != null && M2.CanCast && !HeroPlayer.HasBuff("SmiteBuff") &&
+                        !HeroPlayer.HasBuff("DivineShieldBuff") &&
                         !HeroPlayer.HasBuff("LawBringerLeap") && HeroPlayer.EnemiesAroundAlive(M2SafeRange) < 1 &&
                         Healing.GetBoolean("healing.useM2") && Healing.GetBoolean("healing.autohealSelf"))
                     {
@@ -581,7 +477,8 @@ namespace Kavey_Series.Champions
                         return;
                     }
 
-                    if (M2Allies != null && M2.CanCast && !HeroPlayer.HasBuff("SmiteBuff") && !HeroPlayer.HasBuff("DivineShieldBuff") &&
+                    if (M2Allies != null && M2.CanCast && !HeroPlayer.HasBuff("SmiteBuff") &&
+                        !HeroPlayer.HasBuff("DivineShieldBuff") &&
                         !HeroPlayer.HasBuff("LawBringerLeap") && HeroPlayer.EnemiesAroundAlive(M2SafeRange) < 1 &&
                         Healing.GetBoolean("healing.useM2"))
                     {
@@ -590,7 +487,8 @@ namespace Kavey_Series.Champions
                         return;
                     }
 
-                    if (ETarget != null && E.CanCast && !HeroPlayer.HasBuff("SmiteBuff") && Combo.GetBoolean("combo.useE"))
+                    if (ETarget != null && E.CanCast && !HeroPlayer.HasBuff("DivineShieldBuff") && !HeroPlayer.HasBuff("SmiteBuff") &&
+                        Combo.GetBoolean("combo.useE"))
                     {
                         LocalPlayer.PressAbility(E.Slot, true);
                         CastingAbility = E;
@@ -598,7 +496,6 @@ namespace Kavey_Series.Champions
                 }
                 else
                 {
-
                     if (CastingAbility == null)
                         CastingAbility = GetAbilityFromIndex(Utility.Player.AbilitySystem.CastingAbilityIndex);
                     if (CastingAbility == null)
@@ -609,7 +506,8 @@ namespace Kavey_Series.Champions
                         case AbilityKey.EX1:
                             if (EX1Execute != null)
                             {
-                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, EX1Execute, EX1.Range, EX1.Speed, EX1.Radius);
+                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, EX1Execute, EX1.Range,
+                                    EX1.Speed, EX1.Radius, true);
                                 if (pred.CanHit)
                                     LocalPlayer.Aim(pred.CastPosition);
                                 else
@@ -617,7 +515,8 @@ namespace Kavey_Series.Champions
                             }
                             else if (EX1Allies != null)
                             {
-                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, EX1Allies, EX1.Range, EX1.Speed, EX1.Radius, true);
+                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, EX1Allies, EX1.Range,
+                                    EX1.Speed, EX1.Radius, true);
                                 if (pred.CanHit)
                                     LocalPlayer.Aim(pred.CastPosition);
                                 else
@@ -627,12 +526,14 @@ namespace Kavey_Series.Champions
                             {
                                 LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
                             }
+
                             break;
 
                         case AbilityKey.Space:
                             if (SpaceExecute != null)
                             {
-                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, SpaceExecute, Space.Range, Space.Speed, Space.Radius);
+                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, SpaceExecute,
+                                    Space.Range, Space.Speed, Space.Radius, true);
                                 if (pred.CanHit)
                                     LocalPlayer.Aim(pred.CastPosition);
                                 else
@@ -640,7 +541,8 @@ namespace Kavey_Series.Champions
                             }
                             else if (SpaceAllies != null)
                             {
-                                var pred = TestPrediction.GetPrediction(Utility.MyPos, SpaceAllies, Space.Range, Space.Speed, Space.Radius, 0.2f, 0f, true);
+                                var pred = TestPrediction.GetPrediction(Utility.MyPos, SpaceAllies, Space.Range,
+                                    Space.Speed, Space.Radius, 0.2f, 0f, true);
                                 if (pred.CanHit)
                                     LocalPlayer.Aim(pred.CastPosition);
                                 else
@@ -650,12 +552,14 @@ namespace Kavey_Series.Champions
                             {
                                 LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
                             }
+
                             break;
 
                         case AbilityKey.F:
                             if (FTarget != null)
                             {
-                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, FTarget, F.Range, F.Speed, F.Radius);
+                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, FTarget, F.Range,
+                                    F.Speed, F.Radius, true);
                                 if (pred.CanHit)
                                     LocalPlayer.Aim(pred.CastPosition);
                                 else
@@ -665,35 +569,37 @@ namespace Kavey_Series.Champions
                             {
                                 LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
                             }
+
                             break;
 
                         case AbilityKey.M1:
                             if (M1Target != null)
-                            {
                                 LocalPlayer.Aim(M1Target.MapObject.Position);
-                            }
                             else if (Combo.GetBoolean("combo.interruptM1"))
-                            {
                                 LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
-                            }
                             break;
 
                         case AbilityKey.M2:
                             if (ETarget != null && HeroPlayer.HasBuff("SmiteBuff"))
                             {
-                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, ETarget, E.Range, E.Speed, E.Radius, true);
+                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, ETarget, E.Range,
+                                    E.Speed, E.Radius, true);
                                 if (pred.CanHit)
                                     LocalPlayer.Aim(pred.CastPosition);
                             }
-                            else if (M2Self != null && !HeroPlayer.HasBuff("SmiteBuff") && !HeroPlayer.HasBuff("LawBringerLeap") &&
-                                     HeroPlayer.EnemiesAroundAlive(M2SafeRange) < 1 && Healing.GetBoolean("healing.autohealSelf"))
+                            else if (M2Self != null && !HeroPlayer.HasBuff("SmiteBuff") &&
+                                     !HeroPlayer.HasBuff("LawBringerLeap") &&
+                                     HeroPlayer.EnemiesAroundAlive(M2SafeRange) < 1 &&
+                                     Healing.GetBoolean("healing.autohealSelf"))
                             {
                                 LocalPlayer.Aim(HeroPlayer.MapObject.Position);
                             }
-                            else if (M2Allies != null && !HeroPlayer.HasBuff("SmiteBuff") && !HeroPlayer.HasBuff("LawBringerLeap") &&
+                            else if (M2Allies != null && !HeroPlayer.HasBuff("SmiteBuff") &&
+                                     !HeroPlayer.HasBuff("LawBringerLeap") &&
                                      HeroPlayer.EnemiesAroundAlive(M2SafeRange) < 1)
                             {
-                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, M2Allies, M2.Range, M2.Speed, M2.Radius);
+                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, M2Allies, M2.Range,
+                                    M2.Speed, M2.Radius, true);
                                 if (pred.CanHit)
                                     LocalPlayer.Aim(pred.CastPosition);
                                 else
@@ -703,6 +609,7 @@ namespace Kavey_Series.Champions
                             {
                                 LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
                             }
+
                             break;
                     }
                 }

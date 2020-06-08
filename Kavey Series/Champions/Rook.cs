@@ -112,7 +112,7 @@ namespace Kavey_Series.Champions
 
         public void InitializeAbilities()
         {
-            M1 = new Ability(AbilityKey.M1, 2.5f);
+            M1 = new Ability(AbilityKey.M1, 2.6f);
             M2 = new Ability(AbilityKey.M2, 3f, 10f, 1.90f, SkillType.Circle);
             EX1 = new Ability(AbilityKey.EX1);
             EX2 = new Ability(AbilityKey.EX2, 10f, 25f, 0.5f);
