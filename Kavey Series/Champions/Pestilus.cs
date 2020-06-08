@@ -631,6 +631,18 @@ namespace Kavey_Series.Champions
 
                     switch (CastingAbility.Key)
                     {
+
+                        case AbilityKey.R:
+                            if (RAllies != null)
+                            {
+                                LocalPlayer.Aim(RAllies.MapObject.Position);
+                            }
+                            else
+                            {
+                                LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
+                            }
+                            break;
+
                         case AbilityKey.EX2:
                             if (EX2Execute != null)
                             {
