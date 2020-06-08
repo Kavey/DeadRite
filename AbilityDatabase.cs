@@ -1459,7 +1459,7 @@ namespace Hoyer.Base.Data.Abilites
                 AbilityType = DodgeAbilityType.Jump,
                 Range = 4,
                 MinDanger = 4,
-                Priority = 2,
+                Priority = 3,
                 CastTime = 0.1f
             });
             Add(new DodgeAbilityInfo
@@ -1470,11 +1470,56 @@ namespace Hoyer.Base.Data.Abilites
                 AbilityId = 386203254,
                 AbilityIndex = 16,
                 AbilityType = DodgeAbilityType.Jump,
-                NeedsSelfCast = true,
                 Range = 4.5f,
                 MinDanger = 3,
+                Priority = 2,
+                CastTime = 0.1f
+            });
+            Add(new DodgeAbilityInfo
+            {
+                Champion = "Ulric",
+                AbilitySlot = AbilitySlot.Ability3,
+                AbilityId = 716090704,
+                AbilityIndex = 2,
+                AbilityType = DodgeAbilityType.Jump,
+                MinDanger = 2,
+                Priority = 4,
+                CastTime = 0.2f
+            });
+            Add(new DodgeAbilityInfo
+            {
+                Champion = "Ulric",
+                AbilitySlot = AbilitySlot.Ability4,
+                SharedCooldown = AbilitySlot.EXAbility2,
+                AbilityId = 353791176,
+                AbilityIndex = 50,
+                AbilityType = DodgeAbilityType.Shield,
+                MinDanger = 2,
+                Priority = 2,
+                CastTime = 0.1f
+            });
+            Add(new DodgeAbilityInfo
+            {
+                Champion = "Ulric",
+                AbilitySlot = AbilitySlot.Ability6,
+                AbilityId = 353791176,
+                AbilityIndex = 50,
+                AbilityType = DodgeAbilityType.Jump,
+                MinDanger = 2,
                 Priority = 3,
                 CastTime = 0.1f
+            });
+            Add(new DodgeAbilityInfo
+            {
+                Champion = "Ulric",
+                AbilitySlot = AbilitySlot.EXAbility2,
+                SharedCooldown = AbilitySlot.Ability4,
+                AbilityId = 654589575,
+                AbilityIndex = 44,
+                AbilityType = DodgeAbilityType.AoEHealthShield,
+                MinDanger = 2,
+                Priority = 1,
+                CastTime = 0.15f
             });
             Add(new DodgeAbilityInfo
             {
@@ -1562,6 +1607,43 @@ namespace Hoyer.Base.Data.Abilites
                 MinDanger = 3,
                 Priority = 2,
                 CastTime = 0.1f
+            });
+            Add(new DodgeAbilityInfo
+            {
+                Champion = "Iva",
+                AbilitySlot = AbilitySlot.Ability3,
+                AbilityId = 2142661479,
+                AbilityIndex = 4,
+                AbilityType = DodgeAbilityType.Jump,
+                UsesMousePos = true,
+                Range = 8,
+                MinDanger = 2,
+                Priority = 2,
+                CastTime = 0.1f
+            });
+            Add(new DodgeAbilityInfo
+            {
+                Champion = "Iva",
+                AbilitySlot = AbilitySlot.Ability4,
+                AbilityId = 1818763883,
+                AbilityIndex = 7,
+                AbilityType = DodgeAbilityType.HealthShield,
+                NeedsSelfCast = true,
+                MinDanger = 2,
+                Priority = 1,
+                CastTime = 0.1f
+            });
+            Add(new DodgeAbilityInfo
+            {
+                Champion = "Iva",
+                AbilitySlot = AbilitySlot.Ability6,
+                AbilityId = 559054880,
+                AbilityIndex = 11,
+                AbilityType = DodgeAbilityType.Shield,
+                UsesMousePos = true,
+                MinDanger = 2,
+                Priority = 3,
+                CastTime = 0.2f
             });
             Add(new DodgeAbilityInfo
             {
@@ -1802,7 +1884,7 @@ namespace Hoyer.Base.Data.Abilites
                 AbilitySlot = AbilitySlot.Ability2,
                 AbilityId = 565246006,
                 AbilityIndex = 2,
-                AbilityType = DodgeAbilityType.Dash,
+                AbilityType = DodgeAbilityType.Jump,
                 Range = 3.5f,
                 UsesMousePos = true,
                 MinDanger = 2,
@@ -1840,9 +1922,8 @@ namespace Hoyer.Base.Data.Abilites
                 AbilitySlot = AbilitySlot.Ability6,
                 AbilityId = 664746763,
                 AbilityIndex = 49,
-                AbilityType = DodgeAbilityType.Dash,
+                AbilityType = DodgeAbilityType.Jump,
                 Range = 5f,
-                UseMousePos = true,
                 MinDanger = 2,
                 Priority = 4,
                 CastTime = 0.1f
@@ -1930,12 +2011,50 @@ namespace Hoyer.Base.Data.Abilites
             Add(new DodgeAbilityInfo
             {
                 Champion = "Pearl",
+                AbilitySlot = AbilitySlot.Ability3,
+                AbilityId = 1180614181,
+                AbilityIndex = 43,
+                AbilityType = DodgeAbilityType.Jump,
+                Range = 6.5f,
+                MinDanger = 2,
+                Priority = 2,
+                CastTime = 0.1f
+            });
+            Add(new DodgeAbilityInfo
+            {
+                Champion = "Pearl",
                 AbilitySlot = AbilitySlot.Ability4,
                 AbilityId = 1032123680,
                 AbilityIndex = 7,
                 AbilityType = DodgeAbilityType.Counter,
                 MinDanger = 1,
                 Priority = 1,
+                CastTime = 0.1f
+            });
+            Add(new DodgeAbilityInfo
+            {
+                Champion = "Pearl",
+                ObjectName = "BubbleBarrierArea",
+                AbilitySlot = AbilitySlot.Ability5,
+                AbilityId = 1957843087,
+                AbilityIndex = 38,
+                // AbilityType = DodgeAbilityType.Obstacle,
+                AbilityType = DodgeAbilityType.Shield,
+                NeedsSelfCast = true,
+                MinDanger = 2,
+                Priority = 3,
+                CastTime = 0.2f
+            });
+            Add(new DodgeAbilityInfo
+            {
+                Champion = "Pearl",
+                AbilitySlot = AbilitySlot.Ability6,
+                AbilityId = 1069119398,
+                AbilityIndex = 45,
+                AbilityType = DodgeAbilityType.HealthShield,
+                NeedsSelfCast = true,
+                MinDanger = 2,
+                Priority = 4,
                 CastTime = 0.1f
             });
             Add(new DodgeAbilityInfo

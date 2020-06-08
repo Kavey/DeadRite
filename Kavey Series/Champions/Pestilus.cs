@@ -440,9 +440,10 @@ namespace Kavey_Series.Champions
                 // Dispelling Debuff (allies):
                 //
                 var alliesToTargetR = alliesToTargetBase.Where(x => // x.Get<AgeObject>().Age > 0.75f &&
-                    // x.HasBuff("Weaken") || !x.IsLocalPlayer && x.HasBuff("Stun") || 
+                    x.HasBuff("Weaken") ||
+                    //!x.IsLocalPlayer && x.HasBuff("Stun") || 
                     !x.IsLocalPlayer && x.HasBuff("LunarStrikePetrify") || !x.IsLocalPlayer && x.HasBuff("Panic") ||
-                    !x.IsLocalPlayer && (x.HasBuff("Incapacitate") || x.HasBuff("DeadlyInjectionBuff")) ||
+                    !x.IsLocalPlayer && x.HasBuff("Incapacitate") || x.HasBuff("DeadlyInjectionBuff") ||
                     !x.IsLocalPlayer && x.HasBuff("Fear") || !x.IsLocalPlayer && x.HasBuff("Petrify") ||
                     x.HasBuff("PhantomCutBuff") || x.HasBuff("EntanglingRootsBuff") || // x.HasBuff("FrostDebuff") ||
                     !x.IsLocalPlayer && x.HasBuff("Frozen") || !x.IsLocalPlayer && x.HasBuff("StormStruckDebuff") ||
