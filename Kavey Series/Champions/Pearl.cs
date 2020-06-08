@@ -494,9 +494,17 @@ namespace Kavey_Series.Champions
 
                         case AbilityKey.M1:
                             if (M1Target != null)
-                                LocalPlayer.Aim(M1Target.MapObject.Position);
+                            {
+                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, M1Target, M1.Range, M1.Speed, M1.Radius, true);
+                                if (pred.CanHit)
+                                    LocalPlayer.Aim(pred.CastPosition);
+                                else if (Combo.GetBoolean("combo.interruptM1"))
+                                    LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
+                            }
                             else if (Combo.GetBoolean("combo.interruptM1"))
+                            {
                                 LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
+                            }
                             break;
 
                         case AbilityKey.M2:
