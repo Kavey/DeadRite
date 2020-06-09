@@ -256,12 +256,17 @@ namespace Kavey_Series.Champions
 
             if (HeroPlayer.Living.IsDead) return;
 
+            // if (Channeling)
+            // {
+            //     Drawing.DrawString(new Vector2(1920f / 2f, (1080f / 2f) - 45f).ScreenToWorld(),
+            //         "CASTING OR CHANNELING", Color.red);
+            // }
+
             // if (IsWeaponCharged)
             // {
             //     Drawing.DrawString(new Vector2(1920f / 2f, (1080f / 2f) - 5f).ScreenToWorld(),
             //         "WEAPON IS CHARGED!", Color.magenta);
             // }
-
 
             if (Drawings.GetBoolean("draw.rangeM1.safeRange")) Drawing.DrawCircle(Utility.MyPos, M1.Range, Color.white);
 
@@ -445,6 +450,12 @@ namespace Kavey_Series.Champions
                         return;
                     }
 
+                    if (M1Target != null && IsWeaponCharged && M1.CanCast && Combo.GetBoolean("combo.useM1"))
+                    {
+                        LocalPlayer.PressAbility(M1.Slot, true);
+                        CastingAbility = M1;
+                    }
+
                     if (M2Self != null && M2.CanCast && HeroPlayer.EnemiesAroundAlive(M2SafeRange) < 1 &&
                         Healing.GetBoolean("healing.useM2") && Healing.GetBoolean("healing.autohealSelf"))
                     {
@@ -458,6 +469,7 @@ namespace Kavey_Series.Champions
                     {
                         LocalPlayer.PressAbility(M2.Slot, true);
                         CastingAbility = M2;
+                        return;
                     }
 
                     if (!IsWeaponCharged && EX1.CanCast && !Space.CanCast && Combo.GetBoolean("combo.useEX1"))
