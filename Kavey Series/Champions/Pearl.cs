@@ -137,6 +137,7 @@ namespace Kavey_Series.Champions
                 Healing.Add(new MenuCheckBox("healing.useM2", "Heal M2", true));
                 Healing.Add(new MenuSlider("healing.useM2.safeRange", "    ^ Safe range", 3.25f, 5f, 2.5f));
                 Healing.Add(new MenuCheckBox("healing.useR", "Dispel/Shield on allies in melee range with R", true));
+                Healing.Add(new MenuIntSlider("healing.useR.minEnergyBars", "    ^ Min energy bars", 1, 4, 1));
             }
             //Anti-Gapclosing
             // {
@@ -151,6 +152,7 @@ namespace Kavey_Series.Champions
                 Misc.Add(new MenuCheckBox("misc.useQ", "Try to counter melees with Q", true));
                 Misc.Add(new MenuCheckBox("misc.useE.melee", "Use normal Bubble on self on melee range if no escape", true));
                 Misc.Add(new MenuCheckBox("misc.useEX2.melee", "Use EX Bubble on self on melee range if no escape", true));
+                Misc.Add(new MenuIntSlider("misc.useEX2.melee.minEnergyBars", "    ^ Min energy bars", 2, 4, 1));
                 Misc.Add(new MenuCheckBox("misc.useE.TastyFish", "Use Bubble on self with Tasty Fish and charged weapon", true));
             }
             //Drawings
@@ -442,7 +444,7 @@ namespace Kavey_Series.Champions
 
                     if (RAllies != null && R.CanCast && Healing.GetBoolean("healing.useR"))
                     {
-                        var energyRequired = 25;
+                        var energyRequired = Healing.GetIntSlider("healing.useR.minEnergyBars") * 25; ;
                         if (energyRequired <= HeroPlayer.Energized.Energy)
                         {
                             LocalPlayer.PressAbility(R.Slot, true);
@@ -453,7 +455,7 @@ namespace Kavey_Series.Champions
 
                     if (HeroPlayer.EnemiesAroundAlive(MeleeRange) > 0 && EX2.CanCast && !Space.CanCast && !Q.CanCast && Misc.GetBoolean("misc.useEX2.melee"))
                     {
-                        var energyRequired = 50;
+                        var energyRequired = Misc.GetIntSlider("misc.useEX2.melee.minEnergyBars") * 25; ;
                         if (energyRequired <= HeroPlayer.Energized.Energy)
                         {
                             LocalPlayer.Aim(HeroPlayer.MapObject.Position);
