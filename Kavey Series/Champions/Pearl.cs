@@ -149,7 +149,7 @@ namespace Kavey_Series.Champions
                 Misc.Add(new MenuCheckBox("misc.antiJump", "Anti Jumps with Space", true));
                 Misc.Add(new MenuCheckBox("misc.useQ", "Try to counter melees with Q", true));
                 Misc.Add(new MenuCheckBox("misc.useE.melee", "Use Bubble on self on melee range", false));
-                Misc.Add(new MenuCheckBox("misc.useE.RipplingWaters", "Use Bubble on self with Rippling Waters", true));
+                Misc.Add(new MenuCheckBox("misc.useE.RipplingWaters", "Use Bubble on self with Rippling Waters and charged weapon", true));
             }
             //Drawings
             {
