@@ -113,7 +113,8 @@ namespace Kavey_Series.Champions
                 Keys.Add(new MenuKeybind("keys.M2", "Right Mouse keybind to pause Auto Combo", KeyCode.Mouse1));
                 Keys.Add(new MenuKeybind("keys.Space", "Space keybind to pause Auto Combo", KeyCode.Space));
                 Keys.Add(new MenuKeybind("keys.E", "E keybind to pause Auto Combo", KeyCode.Alpha2));
-                Keys.Add(new MenuKeybind("keys.EX2", "EX1 keybind to pause Auto Combo", KeyCode.G));
+                Keys.Add(new MenuKeybind("keys.EX2", "EX2 keybind to pause Auto Combo", KeyCode.G));
+                Keys.Add(new MenuKeybind("keys.F", "F keybind to pause Auto Combo", KeyCode.F));
             }
             //Combo
             {
@@ -123,7 +124,11 @@ namespace Kavey_Series.Champions
                 Combo.Add(new MenuCheckBox("combo.useM1", "Use Left Mouse", true));
                 Combo.Add(new MenuCheckBox("combo.interruptM1", " ^ Interrupt Left Mouse if needed", true));
                 // Combo.Add(new MenuSlider("combo.useM1.safeRange", "    ^ Safe range", 2.5f, 5f, 0f));
-                Combo.Add(new MenuCheckBox("combo.useF", "Use F", true));
+                Combo.Add(new MenuCheckBox("combo.useSpace.reset", "Use Space to recharge weapon", true));
+                Combo.Add(new MenuSlider("combo.useSpace.safeRange", "    ^ Safe range", 2.5f, 5f, 2.5f));
+                Combo.Add(new MenuCheckBox("combo.useEX1", "Use EX1", true));
+                Combo.Add(new MenuIntSlider("combo.useEX1.minEnergyBars", "    ^ Min energy bars", 2, 4, 1));
+                Combo.Add(new MenuCheckBox("combo.useF", "Use F", false));
             }
             //Healing
             {
@@ -131,7 +136,7 @@ namespace Kavey_Series.Champions
                 Healing.Add(new MenuCheckBox("healing.autohealSelf", "Auto Self Healing", true));
                 Healing.Add(new MenuCheckBox("healing.useM2", "Heal M2", true));
                 Healing.Add(new MenuSlider("healing.useM2.safeRange", "    ^ Safe range", 3.25f, 5f, 2.5f));
-                Healing.Add(new MenuCheckBox("healing.useR", "Dispel with R", true));
+                Healing.Add(new MenuCheckBox("healing.useR", "Dispel/Shield on allies in melee range with R", true));
             }
             //Anti-Gapclosing
             // {
@@ -142,8 +147,9 @@ namespace Kavey_Series.Champions
                 Misc = new Menu("pearl.misc", "Misc", false);
                 // Misc.Add(new MenuCheckBox("misc.targetOrb", "Attack the Orb", true));
                 Misc.Add(new MenuCheckBox("misc.antiJump", "Anti Jumps with Space", true));
+                Misc.Add(new MenuCheckBox("misc.useQ", "Try to counter melees with Q", true));
                 Misc.Add(new MenuCheckBox("misc.useE.melee", "Use Bubble on self on melee range", false));
-                Misc.Add(new MenuCheckBox("misc.useE.RipplingWaters", "Use Bubble on self with Rippling Waters", false));
+                Misc.Add(new MenuCheckBox("misc.useE.RipplingWaters", "Use Bubble on self with Rippling Waters", true));
             }
             //Drawings
             {
@@ -165,18 +171,18 @@ namespace Kavey_Series.Champions
 
         public void InitializeAbilities()
         {
-            M1 = new Ability(AbilityKey.M1, 7.6f, 22f, 0.25f);
+            M1 = new Ability(AbilityKey.M1, 7.2f, 22f, 0.25f);
             M2 = new Ability(AbilityKey.M2, 9f, 28f, 0.75f);
             EX1 = new Ability(AbilityKey.EX1);
             EX2 = new Ability(AbilityKey.EX2);
             Space = new Ability(AbilityKey.Space);
-            Q = new Ability(AbilityKey.Q);
+            Q = new Ability(AbilityKey.Q, 10f);
             E = new Ability(AbilityKey.E, 8f);
             R = new Ability(AbilityKey.R, 10f);
-            F = new Ability(AbilityKey.F, 10f, 15f, 1.25f);
+            F = new Ability(AbilityKey.F, 8f, 25f, 1.25f, SkillType.Circle);
         }
 
-        private static bool IsInDive
+        public static bool IsInDive
         {
             get
             {
@@ -187,6 +193,15 @@ namespace Kavey_Series.Champions
                 }
 
                 return false;
+            }
+        }
+
+        public static bool IsWeaponCharged
+        {
+            get
+            {
+                var abilityHud = LocalPlayer.GetAbilityHudData(AbilitySlot.Ability1);
+                return abilityHud.Name.Equals("VolatileWaterChargedAbility");
             }
         }
 
@@ -241,11 +256,12 @@ namespace Kavey_Series.Champions
 
             if (HeroPlayer.Living.IsDead) return;
 
-            // if (HeroPlayer.IsWeaponCharged)
+            // if (IsWeaponCharged)
             // {
-            //     Drawing.DrawString(new Vector2(1920f / 2f, (1080f / 2f) - 45f).ScreenToWorld(),
+            //     Drawing.DrawString(new Vector2(1920f / 2f, (1080f / 2f) - 5f).ScreenToWorld(),
             //         "WEAPON IS CHARGED!", Color.magenta);
             // }
+
 
             if (Drawings.GetBoolean("draw.rangeM1.safeRange")) Drawing.DrawCircle(Utility.MyPos, M1.Range, Color.white);
 
@@ -259,7 +275,7 @@ namespace Kavey_Series.Champions
                 return;
 
             if (IsInDive || Keys.GetBoolean("keys.autoCombo") && (Keys.GetKeybind("keys.M1") || Keys.GetKeybind("keys.M2") || Keys.GetKeybind("keys.Space") || 
-                                                                  Keys.GetKeybind("keys.E") || Keys.GetKeybind("keys.EX2")))
+                                                                  Keys.GetKeybind("keys.E") || Keys.GetKeybind("keys.EX2") || Keys.GetKeybind("keys.F")))
             {
                 LocalPlayer.EditAimPosition = false;
                 CastingAbility = null;
@@ -290,6 +306,7 @@ namespace Kavey_Series.Champions
 
             // var ennemiesToTargetMelee = enemiesToTargetBase.Where(x => x.);
 
+            var MeleeRange = 2.5f;
             var M2SafeRange = Healing.GetSlider("healing.useM2.safeRange");
             var TastyFishHeal = 10;
             var M2Heal = 21;
@@ -300,33 +317,35 @@ namespace Kavey_Series.Champions
             var alliesToTargetM2 =
                 alliesToTargetHeal.Where(x => x.Living.Health <= x.Living.MaxRecoveryHealth - M2Heal);
 
+            var selfToTargetQ = enemiesToTargetBase.Where(x => x.Distance(HeroPlayer) <= MeleeRange && x.AbilitySystem.IsCasting);
+
             var CrushingBlowRange = 3.75f;
-            var BurrowRange = 2.5f;
             var enemiesToaAntiJump =
                 EntitiesManager.EnemyTeam.Where(x => (x.HasBuff("CrushingBlow") || x.HasBuff("BurrowAlternate"))
                                                      && (x.Distance(HeroPlayer) <= CrushingBlowRange ||
-                                                         x.Distance(HeroPlayer) <= BurrowRange));
+                                                         x.Distance(HeroPlayer) <= MeleeRange));
 
             // Dispelling Debuff (allies):
             //
             var alliesToTargetR = alliesToTargetBase.Where(x => // x.Get<AgeObject>().Age > 0.75f &&
-                x.HasBuff("Weaken") ||
-                //!x.IsLocalPlayer && x.HasBuff("Stun") || 
-                !x.IsLocalPlayer && x.HasBuff("LunarStrikePetrify") || !x.IsLocalPlayer && x.HasBuff("Panic") ||
-                !x.IsLocalPlayer && x.HasBuff("Incapacitate") || x.HasBuff("DeadlyInjectionBuff") ||
-                !x.IsLocalPlayer && x.HasBuff("Fear") || !x.IsLocalPlayer && x.HasBuff("Petrify") ||
-                x.HasBuff("PhantomCutBuff") || x.HasBuff("EntanglingRootsBuff") || // x.HasBuff("FrostDebuff") ||
-                !x.IsLocalPlayer && x.HasBuff("Frozen") || !x.IsLocalPlayer && x.HasBuff("StormStruckDebuff") ||
-                !x.IsLocalPlayer && x.HasBuff("BrainBugDebuff") || x.HasBuff("HandOfJudgementBuff") ||
-                // x.HasBuff("HandOfCorruptionBuff) ||
-                !x.IsLocalPlayer && x.HasBuff("SheepTrickDebuff") || x.HasBuff("SludgeSpitDebuff") ||
-                x.HasBuff("BlindingLightBlind"));
+                 x.HasBuff("Weaken") ||
+                 //!x.IsLocalPlayer && x.HasBuff("Stun") || 
+                 !x.IsLocalPlayer && x.HasBuff("LunarStrikePetrify") || !x.IsLocalPlayer && x.HasBuff("Panic") ||
+                 !x.IsLocalPlayer && x.HasBuff("Incapacitate") || x.HasBuff("DeadlyInjectionBuff") ||
+                 !x.IsLocalPlayer && x.HasBuff("Fear") || !x.IsLocalPlayer && x.HasBuff("Petrify") ||
+                 x.HasBuff("PhantomCutBuff") || x.HasBuff("EntanglingRootsBuff") || // x.HasBuff("FrostDebuff") ||
+                 !x.IsLocalPlayer && x.HasBuff("Frozen") || !x.IsLocalPlayer && x.HasBuff("StormStruckDebuff") ||
+                 !x.IsLocalPlayer && x.HasBuff("BrainBugDebuff") || x.HasBuff("HandOfJudgementBuff") ||
+                 // x.HasBuff("HandOfCorruptionBuff) ||
+                 !x.IsLocalPlayer && x.HasBuff("SheepTrickDebuff") || x.HasBuff("SludgeSpitDebuff") ||
+                 x.HasBuff("BlindingLightBlind") || x.EnemiesAroundAlive(MeleeRange) > 0);
             //
 
             // var targetSelf = TargetSelector.GetTarget(alliesSelf, targetMode, 1f);
             var M1Target = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, M1.Range);
             var M2Self = TargetSelector.GetTarget(selfToTargetM2, TargetingMode.NearMouse, M2.Range);
             var M2Allies = TargetSelector.GetTarget(alliesToTargetM2, TargetingMode.LowestHealth, M2.Range);
+            var QSelf = TargetSelector.GetTarget(selfToTargetQ, TargetingMode.NearMouse, Q.Range);
             var EAllies = TargetSelector.GetTarget(alliesToTargetE, TargetingMode.NearMouse, E.Range);
             var RAllies = TargetSelector.GetTarget(alliesToTargetR, TargetingMode.NearMouse, R.Range);
             var SpaceAntiJump = TargetSelector.GetTarget(enemiesToaAntiJump, TargetingMode.NearMouse, R.Range);
@@ -362,7 +381,8 @@ namespace Kavey_Series.Champions
 
             // if (IsAntiGapclosing)
             //     return;
-            if (Keys.GetKeybind("keys.combo") || Keys.GetBoolean("keys.autoCombo") && !Keys.GetKeybind("keys.healSelf"))
+            if (Keys.GetKeybind("keys.combo") || Keys.GetBoolean("keys.autoCombo") && !Keys.GetKeybind("keys.healSelf") &&
+                !HeroPlayer.HasBuff("TidalWaveTrance"))
             {
                 //Combo
                 if (!Channeling)
@@ -371,6 +391,21 @@ namespace Kavey_Series.Champions
                     CastingAbility = null;
 
                     if (SpaceAntiJump != null && R.CanCast && Misc.GetBoolean("misc.antiJump"))
+                    {
+                        LocalPlayer.PressAbility(Space.Slot, true);
+                        CastingAbility = Space;
+                        return;
+                    }
+
+                    if (QSelf != null && Q.CanCast && Misc.GetBoolean("misc.useQ"))
+                    {
+                        LocalPlayer.PressAbility(Q.Slot, true);
+                        CastingAbility = Q;
+                        return;
+                    }
+
+                    if (HeroPlayer.EnemiesAroundAlive(Combo.GetSlider("combo.useSpace.safeRange")) > 0 &&
+                        !IsWeaponCharged && Space.CanCast && Combo.GetBoolean("combo.useSpace.reset"))
                     {
                         LocalPlayer.PressAbility(Space.Slot, true);
                         CastingAbility = Space;
@@ -388,7 +423,7 @@ namespace Kavey_Series.Champions
                         }
                     }
 
-                    if (HeroPlayer.EnemiesAroundAlive(2.5f) > 0 && E.CanCast && Misc.GetBoolean("misc.useE.melee"))
+                    if (HeroPlayer.EnemiesAroundAlive(MeleeRange) > 0 && E.CanCast && Misc.GetBoolean("misc.useE.melee"))
                     {
                         LocalPlayer.Aim(HeroPlayer.MapObject.Position);
                         LocalPlayer.PressAbility(E.Slot, true);
@@ -410,21 +445,6 @@ namespace Kavey_Series.Champions
                         return;
                     }
 
-                    if (M1Target != null && E.CanCast && HasRipplingWaters && Misc.GetBoolean("misc.useE.RipplingWaters"))
-                    {
-                        LocalPlayer.Aim(HeroPlayer.MapObject.Position);
-                        LocalPlayer.PressAbility(E.Slot, true);
-                        CastingAbility = E;
-                        return;
-                    }
-
-                    if (M1Target != null && M1.CanCast && Combo.GetBoolean("combo.useM1"))
-                    {
-                        LocalPlayer.PressAbility(M1.Slot, true);
-                        CastingAbility = M1;
-                        return;
-                    }
-
                     if (M2Self != null && M2.CanCast && HeroPlayer.EnemiesAroundAlive(M2SafeRange) < 1 &&
                         Healing.GetBoolean("healing.useM2") && Healing.GetBoolean("healing.autohealSelf"))
                     {
@@ -438,6 +458,31 @@ namespace Kavey_Series.Champions
                     {
                         LocalPlayer.PressAbility(M2.Slot, true);
                         CastingAbility = M2;
+                    }
+
+                    if (!IsWeaponCharged && EX1.CanCast && !Space.CanCast && Combo.GetBoolean("combo.useEX1"))
+                    {
+                        var energyRequired = Combo.GetIntSlider("combo.useEX1.minEnergyBars") * 25; ;
+                        if (energyRequired <= HeroPlayer.Energized.Energy)
+                        {
+                            LocalPlayer.PressAbility(EX1.Slot, true);
+                            CastingAbility = EX1;
+                            return;
+                        }
+                    }
+
+                    if (M1Target != null && E.CanCast && IsWeaponCharged && HasRipplingWaters && Misc.GetBoolean("misc.useE.RipplingWaters"))
+                    {
+                        LocalPlayer.Aim(HeroPlayer.MapObject.Position);
+                        LocalPlayer.PressAbility(E.Slot, true);
+                        CastingAbility = E;
+                        return;
+                    }
+
+                    if (M1Target != null && M1.CanCast && Combo.GetBoolean("combo.useM1"))
+                    {
+                        LocalPlayer.PressAbility(M1.Slot, true);
+                        CastingAbility = M1;
                     }
                 }
                 else
@@ -478,8 +523,8 @@ namespace Kavey_Series.Champions
                         case AbilityKey.F:
                             if (FTarget != null)
                             {
-                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, FTarget, F.Range,
-                                    F.Speed, F.Radius, true);
+                                var pred = TestPrediction.GetPrediction(Utility.MyPos, FTarget, F.Range,
+                                    F.Speed, F.Radius);
                                 if (pred.CanHit)
                                     LocalPlayer.Aim(pred.CastPosition);
                                 else
@@ -490,21 +535,6 @@ namespace Kavey_Series.Champions
                                 LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
                             }
 
-                            break;
-
-                        case AbilityKey.M1:
-                            if (M1Target != null)
-                            {
-                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, M1Target, M1.Range, M1.Speed, M1.Radius, true);
-                                if (pred.CanHit)
-                                    LocalPlayer.Aim(pred.CastPosition);
-                                else if (Combo.GetBoolean("combo.interruptM1"))
-                                    LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
-                            }
-                            else if (Combo.GetBoolean("combo.interruptM1"))
-                            {
-                                LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
-                            }
                             break;
 
                         case AbilityKey.M2:
@@ -527,6 +557,29 @@ namespace Kavey_Series.Champions
                                 LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
                             }
 
+                            break;
+
+                        case AbilityKey.M1:
+                            if (M1Target != null && IsWeaponCharged)
+                            {
+                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, M1Target, M1.Range + 0.4f, M1.Speed + 5f, M1.Radius, true);
+                                if (pred.CanHit)
+                                    LocalPlayer.Aim(pred.CastPosition);
+                                else if (Combo.GetBoolean("combo.interruptM1"))
+                                    LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
+                            }
+                            else if (M1Target != null)
+                            {
+                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, M1Target, M1.Range, M1.Speed, M1.Radius, true);
+                                if (pred.CanHit)
+                                    LocalPlayer.Aim(pred.CastPosition);
+                                else if (Combo.GetBoolean("combo.interruptM1"))
+                                    LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
+                            }
+                            else if (Combo.GetBoolean("combo.interruptM1"))
+                            {
+                                LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
+                            }
                             break;
                     }
                 }
