@@ -147,9 +147,11 @@ namespace Kavey_Series.Champions
                 Misc = new Menu("pearl.misc", "Misc", false);
                 // Misc.Add(new MenuCheckBox("misc.targetOrb", "Attack the Orb", true));
                 Misc.Add(new MenuCheckBox("misc.antiJump", "Anti Jumps with Space", true));
+                Misc.Add(new MenuCheckBox("misc.useSpace.reset", "Use Space to charge weapon if nothing else to do", true));
                 Misc.Add(new MenuCheckBox("misc.useQ", "Try to counter melees with Q", true));
-                Misc.Add(new MenuCheckBox("misc.useE.melee", "Use Bubble on self on melee range", false));
-                Misc.Add(new MenuCheckBox("misc.useE.RipplingWaters", "Use Bubble on self with Rippling Waters and charged weapon", true));
+                Misc.Add(new MenuCheckBox("misc.useE.melee", "Use normal Bubble on self on melee range if no escape", true));
+                Misc.Add(new MenuCheckBox("misc.useEX2.melee", "Use EX Bubble on self on melee range if no escape", true));
+                Misc.Add(new MenuCheckBox("misc.useE.TastyFish", "Use Bubble on self with Tasty Fish and charged weapon", true));
             }
             //Drawings
             {
@@ -205,7 +207,7 @@ namespace Kavey_Series.Champions
             }
         }
 
-        public static bool HasRipplingWaters
+        public static bool HasTastyFishUpgrade
         {
             get
             {
@@ -218,14 +220,14 @@ namespace Kavey_Series.Champions
                     if (br != null) Battlerites.Add(br);
                 }
         
-                var RipplingWaters = Battlerites.Any(x => x.Name.Equals("RipplingWatersUpgrade"));
+                var RipplingWaters = Battlerites.Any(x => x.Name.Equals("TastyFishUpgrade"));
                 if (RipplingWaters) return true;
         
                 return false;
             }
         }
 
-        // public static bool HasTastyFishUpgrade
+        // public static bool HasRipplingWaters
         // {
         //     get
         //     {
@@ -238,7 +240,7 @@ namespace Kavey_Series.Champions
         //             if (br != null) Battlerites.Add(br);
         //         }
         //
-        //         var RipplingWaters = Battlerites.Any(x => x.Name.Equals("TastyFishUpgrade"));
+        //         var RipplingWaters = Battlerites.Any(x => x.Name.Equals("RipplingWatersUpgrade"));
         //         if (RipplingWaters) return true;
         //
         //         return false;
@@ -279,7 +281,15 @@ namespace Kavey_Series.Champions
                 //|| HeroPlayer.IsMounted
                 return;
 
-            if ((Keys.GetKeybind("keys.E") || Keys.GetKeybind("keys.EX2")) && E.CanCast)
+            if (Keys.GetKeybind("keys.EX2") && EX2.CanCast)
+            {
+                LocalPlayer.PressAbility(EX2.Slot, true);
+                LocalPlayer.EditAimPosition = false;
+                CastingAbility = null;
+                return;
+            }
+
+            if (Keys.GetKeybind("keys.E") && E.CanCast)
             {
                 LocalPlayer.PressAbility(E.Slot, true);
                 LocalPlayer.EditAimPosition = false;
@@ -287,8 +297,8 @@ namespace Kavey_Series.Champions
                 return;
             }
 
-            if (IsInDive || Keys.GetBoolean("keys.autoCombo") && (Keys.GetKeybind("keys.M1") || Keys.GetKeybind("keys.M2") || Keys.GetKeybind("keys.Space") || 
-                                                                  Keys.GetKeybind("keys.EX2") || Keys.GetKeybind("keys.F")))
+            if (IsInDive || Keys.GetBoolean("keys.autoCombo") && (Keys.GetKeybind("keys.M1") || Keys.GetKeybind("keys.M2") ||
+                                                                  Keys.GetKeybind("keys.Space") || Keys.GetKeybind("keys.F")))
             {
                 LocalPlayer.EditAimPosition = false;
                 CastingAbility = null;
@@ -330,7 +340,12 @@ namespace Kavey_Series.Champions
             var alliesToTargetM2 =
                 alliesToTargetHeal.Where(x => x.Living.Health <= x.Living.MaxRecoveryHealth - M2Heal);
 
-            var selfToTargetQ = enemiesToTargetBase.Where(x => x.Distance(HeroPlayer) <= MeleeRange && x.AbilitySystem.IsCasting);
+            var selfToTargetQ = enemiesToTargetBase.Where(x => (x.ChampionEnum == Champion.Bakko || x.ChampionEnum == Champion.Croak ||
+                                                                                        x.ChampionEnum == Champion.Freya || x.ChampionEnum == Champion.Jamila ||
+                                                                                        x.ChampionEnum == Champion.Raigon || x.ChampionEnum == Champion.Rook ||
+                                                                                        x.ChampionEnum == Champion.RuhKaan || x.ChampionEnum == Champion.Shifu ||
+                                                                                        x.ChampionEnum == Champion.Thorn || x.ChampionEnum == Champion.Sirius || x.ChampionEnum == Champion.Ulric)
+                                                               && x.Distance(HeroPlayer) <= MeleeRange && x.AbilitySystem.IsCasting);
 
             var CrushingBlowRange = 3.75f;
             var enemiesToaAntiJump =
@@ -360,7 +375,7 @@ namespace Kavey_Series.Champions
             var M2Allies = TargetSelector.GetTarget(alliesToTargetM2, TargetingMode.LowestHealth, M2.Range);
             var QSelf = TargetSelector.GetTarget(selfToTargetQ, TargetingMode.NearMouse, Q.Range);
             var EAllies = TargetSelector.GetTarget(alliesToTargetE, TargetingMode.NearMouse, E.Range);
-            var RAllies = TargetSelector.GetTarget(alliesToTargetR, TargetingMode.NearMouse, R.Range);
+            var RAllies = TargetSelector.GetTarget(alliesToTargetR, TargetingMode.LowestHealth, R.Range);
             var SpaceAntiJump = TargetSelector.GetTarget(enemiesToaAntiJump, TargetingMode.NearMouse, R.Range);
             var FTarget = TargetSelector.GetTarget(enemiesToTargetBase, TargetingMode.LowestHealth, F.Range);
 
@@ -436,7 +451,20 @@ namespace Kavey_Series.Champions
                         }
                     }
 
-                    if (HeroPlayer.EnemiesAroundAlive(MeleeRange) > 0 && E.CanCast && Misc.GetBoolean("misc.useE.melee"))
+                    if (HeroPlayer.EnemiesAroundAlive(MeleeRange) > 0 && EX2.CanCast && !Space.CanCast && !Q.CanCast && Misc.GetBoolean("misc.useEX2.melee"))
+                    {
+                        var energyRequired = 50;
+                        if (energyRequired <= HeroPlayer.Energized.Energy)
+                        {
+                            LocalPlayer.Aim(HeroPlayer.MapObject.Position);
+                            LocalPlayer.PressAbility(EX2.Slot, true);
+                            CastingAbility = EX2;
+                            return;
+                        }
+                    }
+
+                    if (HeroPlayer.EnemiesAroundAlive(MeleeRange) > 0 && E.CanCast && !Space.CanCast && !Q.CanCast &&
+                        HeroPlayer.Living.Health <= HeroPlayer.Living.MaxRecoveryHealth - TastyFishHeal && Misc.GetBoolean("misc.useE.melee"))
                     {
                         LocalPlayer.Aim(HeroPlayer.MapObject.Position);
                         LocalPlayer.PressAbility(E.Slot, true);
@@ -480,7 +508,7 @@ namespace Kavey_Series.Champions
                         return;
                     }
 
-                    if (!IsWeaponCharged && EX1.CanCast && !Space.CanCast && !Q.CanCast && Combo.GetBoolean("combo.useEX1"))
+                    if (M1Target == null && !IsWeaponCharged && EX1.CanCast && !Space.CanCast && Combo.GetBoolean("combo.useEX1"))
                     {
                         var energyRequired = Combo.GetIntSlider("combo.useEX1.minEnergyBars") * 25; ;
                         if (energyRequired <= HeroPlayer.Energized.Energy)
@@ -491,7 +519,7 @@ namespace Kavey_Series.Champions
                         }
                     }
 
-                    if (M1Target != null && E.CanCast && IsWeaponCharged && HasRipplingWaters && Misc.GetBoolean("misc.useE.RipplingWaters"))
+                    if (M1Target != null && E.CanCast && IsWeaponCharged && HasTastyFishUpgrade && Misc.GetBoolean("misc.useE.TastyFish"))
                     {
                         LocalPlayer.Aim(HeroPlayer.MapObject.Position);
                         LocalPlayer.PressAbility(E.Slot, true);
@@ -503,6 +531,12 @@ namespace Kavey_Series.Champions
                     {
                         LocalPlayer.PressAbility(M1.Slot, true);
                         CastingAbility = M1;
+                    }
+
+                    if (Space.CanCast && !IsWeaponCharged && Misc.GetBoolean("misc.useSpace.reset"))
+                    {
+                        LocalPlayer.PressAbility(Space.Slot, true);
+                        CastingAbility = Space;
                     }
                 }
                 else
