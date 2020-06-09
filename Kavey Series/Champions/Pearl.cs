@@ -128,7 +128,7 @@ namespace Kavey_Series.Champions
                 Combo.Add(new MenuSlider("combo.useSpace.safeRange", "    ^ Safe range", 2.5f, 5f, 2.5f));
                 Combo.Add(new MenuCheckBox("combo.useEX1", "Use EX1", true));
                 Combo.Add(new MenuIntSlider("combo.useEX1.minEnergyBars", "    ^ Min energy bars", 2, 4, 1));
-                Combo.Add(new MenuCheckBox("combo.useF", "Use F", false));
+                Combo.Add(new MenuCheckBox("combo.useF", "Use F", true));
             }
             //Healing
             {
@@ -225,25 +225,25 @@ namespace Kavey_Series.Champions
             }
         }
 
-        public static bool HasTastyFishUpgrade
-        {
-            get
-            {
-                var Battlerites = new List<Battlerite>(5);
-                if (Battlerites.Any()) Battlerites.Clear();
-
-                for (var i = 0; i < 5; i++)
-                {
-                    var br = HeroPlayer.BattleriteSystem.GetEquippedBattlerite(i);
-                    if (br != null) Battlerites.Add(br);
-                }
-
-                var RipplingWaters = Battlerites.Any(x => x.Name.Equals("TastyFishUpgrade"));
-                if (RipplingWaters) return true;
-
-                return false;
-            }
-        }
+        // public static bool HasTastyFishUpgrade
+        // {
+        //     get
+        //     {
+        //         var Battlerites = new List<Battlerite>(5);
+        //         if (Battlerites.Any()) Battlerites.Clear();
+        //
+        //         for (var i = 0; i < 5; i++)
+        //         {
+        //             var br = HeroPlayer.BattleriteSystem.GetEquippedBattlerite(i);
+        //             if (br != null) Battlerites.Add(br);
+        //         }
+        //
+        //         var RipplingWaters = Battlerites.Any(x => x.Name.Equals("TastyFishUpgrade"));
+        //         if (RipplingWaters) return true;
+        //
+        //         return false;
+        //     }
+        // }
 
         public Pearl()
         {
@@ -279,8 +279,16 @@ namespace Kavey_Series.Champions
                 //|| HeroPlayer.IsMounted
                 return;
 
+            if ((Keys.GetKeybind("keys.E") || Keys.GetKeybind("keys.EX2")) && E.CanCast)
+            {
+                LocalPlayer.PressAbility(E.Slot, true);
+                LocalPlayer.EditAimPosition = false;
+                CastingAbility = null;
+                return;
+            }
+
             if (IsInDive || Keys.GetBoolean("keys.autoCombo") && (Keys.GetKeybind("keys.M1") || Keys.GetKeybind("keys.M2") || Keys.GetKeybind("keys.Space") || 
-                                                                  Keys.GetKeybind("keys.E") || Keys.GetKeybind("keys.EX2") || Keys.GetKeybind("keys.F")))
+                                                                  Keys.GetKeybind("keys.EX2") || Keys.GetKeybind("keys.F")))
             {
                 LocalPlayer.EditAimPosition = false;
                 CastingAbility = null;
@@ -436,12 +444,12 @@ namespace Kavey_Series.Champions
                         return;
                     }
 
-                    if (EAllies != null && HasTastyFishUpgrade && E.CanCast)
-                    {
-                        LocalPlayer.PressAbility(E.Slot, true);
-                        CastingAbility = E;
-                        return;
-                    }
+                    // if (EAllies != null && HasTastyFishUpgrade && E.CanCast)
+                    // {
+                    //     LocalPlayer.PressAbility(E.Slot, true);
+                    //     CastingAbility = E;
+                    //     return;
+                    // }
 
                     if (FTarget != null && F.CanCast && Combo.GetBoolean("combo.useF"))
                     {
@@ -472,7 +480,7 @@ namespace Kavey_Series.Champions
                         return;
                     }
 
-                    if (!IsWeaponCharged && EX1.CanCast && !Space.CanCast && Combo.GetBoolean("combo.useEX1"))
+                    if (!IsWeaponCharged && EX1.CanCast && !Space.CanCast && !Q.CanCast && Combo.GetBoolean("combo.useEX1"))
                     {
                         var energyRequired = Combo.GetIntSlider("combo.useEX1.minEnergyBars") * 25; ;
                         if (energyRequired <= HeroPlayer.Energized.Energy)
@@ -520,14 +528,14 @@ namespace Kavey_Series.Champions
                             break;
 
                         case AbilityKey.E:
-                            if (EAllies != null)
-                            {
-                                LocalPlayer.Aim(EAllies.MapObject.Position);
-                            }
-                            else
-                            {
-                                LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
-                            }
+                            // if (EAllies != null)
+                            // {
+                            //     LocalPlayer.Aim(EAllies.MapObject.Position);
+                            // }
+                            // else
+                            // {
+                            //     LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
+                            // }
 
                             break;
 
