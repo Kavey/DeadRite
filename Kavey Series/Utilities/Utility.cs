@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using BattleRight.Core;
+using BattleRight.Core.Enumeration;
 using BattleRight.Core.GameObjects;
 using BattleRight.Core.GameObjects.Models;
 using BattleRight.Core.Math;

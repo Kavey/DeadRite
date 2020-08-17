@@ -36,6 +36,7 @@ namespace Kavey_Series.Champions
         public Menu Drawings { get; set; }
 
         public Ability CastingAbility { get; set; }
+        private static Character HeroPlayer => LocalPlayer.Instance;
 
         private static bool Channeling => Utility.Player.IsChanneling || Utility.Player.AbilitySystem.IsCasting;
         private static bool IsBerserk => Utility.Player.Buffs.Any(x => x.ObjectName == "BerserkBuff");
@@ -97,6 +98,7 @@ namespace Kavey_Series.Champions
                 Combo.Add(new MenuSlider("combo.m2.ex.minenergy", "     ^Minimum energy", 2f, 4f, 1f));
                 Combo.Add(new MenuCheckBox("combo.space", "Use Space"));
                 Combo.Add(new MenuCheckBox("combo.space.checkdist", "     ^Don't cast if close"));
+                Combo.Add(new MenuCheckBox("misc.useQ", "Try to counter melees with Q", true));
                 Combo.Add(new MenuCheckBox("combo.e", "Use E"));
                 Combo.Add(new MenuCheckBox("combo.e.checkdist", "     ^Don't cast if close"));
                 Combo.Add(new MenuCheckBox("combo.r", "Use R"));
@@ -116,6 +118,7 @@ namespace Kavey_Series.Champions
             M2 = new Ability(AbilityKey.M2, 3f, 10f, 1.90f, SkillType.Circle);
             EX1 = new Ability(AbilityKey.EX1);
             EX2 = new Ability(AbilityKey.EX2, 10f, 25f, 0.5f);
+            Q = new Ability(AbilityKey.Q, 10f);
             Space = new Ability(AbilityKey.Space, 10f, 25f, 0.5f);
             E = new Ability(AbilityKey.E, 10f, 20f, 2.35f, SkillType.Circle);
             R = new Ability(AbilityKey.R, 4f, float.MaxValue, 3f, SkillType.Circle);
@@ -148,14 +151,24 @@ namespace Kavey_Series.Champions
                     enemiesToTargetBase = enemiesToTargetBase.Where(x => !x.CharacterModel.IsModelInvisible);
                 }
 
+                var MeleeRange = 2.5f;
+
                 var enemiesToTargetProjs = enemiesToTargetBase.Where(x =>
                     !x.IsCountering && !x.HasConsumeBuff && !x.HasBuff("ElectricShield") && 
                     !x.HasBuff("BarbedHuskBuff") && !x.HasBuff("BulwarkBuff") && !x.HasBuff("DivineShieldBuff") &&
                     !x.HasBuff("GustBuff") && !x.HasBuff("TimeBenderBuff"));
 
+                var selfToTargetQ = enemiesToTargetBase.Where(x => (x.ChampionEnum == Champion.Bakko || x.ChampionEnum == Champion.Croak ||
+                                                                            x.ChampionEnum == Champion.Freya || x.ChampionEnum == Champion.Jamila ||
+                                                                            x.ChampionEnum == Champion.Raigon || x.ChampionEnum == Champion.Rook ||
+                                                                            x.ChampionEnum == Champion.RuhKaan || x.ChampionEnum == Champion.Shifu ||
+                                                                            x.ChampionEnum == Champion.Thorn)
+                                                   && x.Distance(HeroPlayer) <= MeleeRange && x.AbilitySystem.IsCasting);
+
                 var M1Target = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, M1.Range);
                 var M2Target = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, M2.Range);
                 var EXM2Target = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, EX2.Range);
+                var QSelf = TargetSelector.GetTarget(selfToTargetQ, TargetingMode.NearMouse, Q.Range);
                 var SpaceTarget = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, Space.Range);
                 var ETarget = TargetSelector.GetTarget(enemiesToTargetBase, TargetingMode.NearMouse, E.Range);
                 var RTarget = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, R.Range);
@@ -169,6 +182,13 @@ namespace Kavey_Series.Champions
                     {
                         LocalPlayer.PressAbility(F.Slot, true);
                         CastingAbility = F;
+                        return;
+                    }
+
+                    if (QSelf != null && Q.CanCast && Combo.GetBoolean("misc.useQ"))
+                    {
+                        LocalPlayer.PressAbility(Q.Slot, true);
+                        CastingAbility = Q;
                         return;
                     }
 

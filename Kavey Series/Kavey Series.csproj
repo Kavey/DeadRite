@@ -56,6 +56,7 @@
     <Compile Include="Abilities\AbilityKey.cs" />
     <Compile Include="AntiGapclose\AntiGapcloser.cs" />
     <Compile Include="Champions\Pearl.cs" />
+    <Compile Include="Champions\Varesh.cs" />
     <Compile Include="Champions\Ulric.cs" />
     <Compile Include="Champions\Pestilus.cs" />
     <Compile Include="Champions\Iva.cs" />

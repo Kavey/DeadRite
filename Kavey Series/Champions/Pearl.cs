@@ -124,7 +124,7 @@ namespace Kavey_Series.Champions
                 Combo.Add(new MenuCheckBox("combo.useM1", "Use Left Mouse", true));
                 Combo.Add(new MenuCheckBox("combo.interruptM1", " ^ Interrupt Left Mouse if needed", true));
                 // Combo.Add(new MenuSlider("combo.useM1.safeRange", "    ^ Safe range", 2.5f, 5f, 0f));
-                Combo.Add(new MenuCheckBox("combo.useSpace.reset", "Use Space to recharge weapon", true));
+                Combo.Add(new MenuCheckBox("combo.useSpace.reset", "Use Space to recharge weapon", false));
                 Combo.Add(new MenuSlider("combo.useSpace.safeRange", "    ^ Safe range", 2.5f, 5f, 2.5f));
                 Combo.Add(new MenuCheckBox("combo.useEX1", "Use EX1", true));
                 Combo.Add(new MenuIntSlider("combo.useEX1.minEnergyBars", "    ^ Min energy bars", 2, 4, 1));
@@ -148,7 +148,6 @@ namespace Kavey_Series.Champions
                 Misc = new Menu("pearl.misc", "Misc", false);
                 // Misc.Add(new MenuCheckBox("misc.targetOrb", "Attack the Orb", true));
                 Misc.Add(new MenuCheckBox("misc.antiJump", "Anti Jumps with Space", true));
-                Misc.Add(new MenuCheckBox("misc.useSpace.reset", "Use Space to charge weapon if nothing else to do", true));
                 Misc.Add(new MenuCheckBox("misc.useQ", "Try to counter melees with Q", true));
                 Misc.Add(new MenuCheckBox("misc.useE.melee", "Use normal Bubble on self on melee range if no escape", true));
                 Misc.Add(new MenuCheckBox("misc.useEX2.melee", "Use EX Bubble on self on melee range if no escape", true));
@@ -434,14 +433,6 @@ namespace Kavey_Series.Champions
                         return;
                     }
 
-                    if (HeroPlayer.EnemiesAroundAlive(Combo.GetSlider("combo.useSpace.safeRange")) > 0 &&
-                        !IsWeaponCharged && Space.CanCast && Combo.GetBoolean("combo.useSpace.reset"))
-                    {
-                        LocalPlayer.PressAbility(Space.Slot, true);
-                        CastingAbility = Space;
-                        return;
-                    }
-
                     if (RAllies != null && R.CanCast && Healing.GetBoolean("healing.useR"))
                     {
                         var energyRequired = Healing.GetIntSlider("healing.useR.minEnergyBars") * 25; ;
@@ -533,9 +524,12 @@ namespace Kavey_Series.Champions
                     {
                         LocalPlayer.PressAbility(M1.Slot, true);
                         CastingAbility = M1;
+                        return;
                     }
 
-                    if (Space.CanCast && !IsWeaponCharged && Misc.GetBoolean("misc.useSpace.reset"))
+                    if (
+                        //HeroPlayer.EnemiesAroundAlive(Combo.GetSlider("combo.useSpace.safeRange")) > 0 &&
+                        !IsWeaponCharged && Space.CanCast && !Q.CanCast && Combo.GetBoolean("combo.useSpace.reset"))
                     {
                         LocalPlayer.PressAbility(Space.Slot, true);
                         CastingAbility = Space;
