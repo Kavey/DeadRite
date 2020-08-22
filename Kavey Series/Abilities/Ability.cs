@@ -2,6 +2,7 @@
 using BattleRight.Core.GameObjects;
 using BattleRight.SDK.Enumeration;
 using Kavey_Series.Utilities;
+using System.Runtime.CompilerServices;
 
 namespace Kavey_Series.Abilities
 {
@@ -23,10 +24,10 @@ namespace Kavey_Series.Abilities
             Radius = radius;
             Type = type;
         }
-        private bool CanCastAbility()
+        public bool CanCastAbility(int cd = 0)
         {
             var hud = LocalPlayer.GetAbilityHudData(GetSlot());
-            return hud != null && hud.CooldownLeft <= 0 && hud.EnergyCost <= Utility.Player.Energized.Energy;
+            return hud != null && hud.CooldownLeft <= cd && hud.EnergyCost <= Utility.Player.Energized.Energy;
         }
 
         private bool CanCastAbilityCharges(int chargesRequired = 1)

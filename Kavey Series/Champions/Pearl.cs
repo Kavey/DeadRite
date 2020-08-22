@@ -426,7 +426,7 @@ namespace Kavey_Series.Champions
                         return;
                     }
 
-                    if (QSelf != null && Q.CanCast && Misc.GetBoolean("misc.useQ"))
+                    if (QSelf != null && Q.CanCast && !IsWeaponCharged && Misc.GetBoolean("misc.useQ"))
                     {
                         LocalPlayer.PressAbility(Q.Slot, true);
                         CastingAbility = Q;
@@ -529,7 +529,7 @@ namespace Kavey_Series.Champions
 
                     if (
                         //HeroPlayer.EnemiesAroundAlive(Combo.GetSlider("combo.useSpace.safeRange")) > 0 &&
-                        !IsWeaponCharged && Space.CanCast && !Q.CanCast && Combo.GetBoolean("combo.useSpace.reset"))
+                        !IsWeaponCharged && Space.CanCast && !Q.CanCastAbility(3) && Combo.GetBoolean("combo.useSpace.reset"))
                     {
                         LocalPlayer.PressAbility(Space.Slot, true);
                         CastingAbility = Space;

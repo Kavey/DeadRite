@@ -31,6 +31,10 @@ namespace Kavey_Series
             try
             {
                 var champName = Utility.Player.CharName;
+                if (champName == "Shen Rao")
+                {
+                    champName = "Shen";
+                }
                 if (LoadedChampions.ContainsKey(champName))
                 {
                     LoadedChampions[champName].Initialize();

@@ -424,7 +424,7 @@ namespace Kavey_Series.Champions
                 var M2Damage = 30;
                 var EX2Damage = 50;
                 var M1Heal = 6;
-                var M2Heal = 20;
+                var M2Heal = 26;
                 var FHeal = 30;
 
                 var enemiesToExecuteM2 = enemiesToTargetProjs.Where(x => x.Living.Health <= M2Damage);

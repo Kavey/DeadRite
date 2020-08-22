@@ -109,7 +109,7 @@ namespace Kavey_Series.Champions
             {
                 Keys = new Menu("alysia.keys", "Keys", true);
                 Keys.Add(new MenuKeybind("keys.combo", "Combo", KeyCode.Mouse0));
-                Keys.Add(new MenuCheckBox("keys.autoCombo", "Auto Combo", false));
+                Keys.Add(new MenuCheckBox("keys.autoCombo", "Auto Combo", true));
                 Keys.Add(new MenuKeybind("keys.m1", "Left Mouse Keybind to stop Auto Combo", KeyCode.Mouse2));
                 Keys.Add(new MenuKeybind("keys.q", "Q Keybind to stop Auto Combo", KeyCode.Alpha1));
                 Keys.Add(new MenuKeybind("keys.e", "E Keybind to stop Auto Combo", KeyCode.Alpha2));
@@ -122,7 +122,7 @@ namespace Kavey_Series.Champions
                 Combo.Add(new MenuCheckBox("combo.invisible", "Attack invisible targets"));
                 Combo.Add(new MenuCheckBox("combo.m2", "Use M2"));
                 Combo.Add(new MenuCheckBox("combo.m2.cc", "     ^Only if target is CC'd", false));
-                Combo.Add(new MenuCheckBox("combo.qself", "Use Q self on melee range"));
+                Combo.Add(new MenuCheckBox("combo.qallies", "Use Q self on allies in melee range"));
                 Combo.Add(new MenuCheckBox("combo.e", "Use E"));
                 Combo.Add(new MenuCheckBox("combo.e.chilled", "     ^Also if target is chilled", false));
                 Combo.Add(new MenuCheckBox("combo.e.cc", "     ^Also if target is CC'd", false));
@@ -252,15 +252,19 @@ namespace Kavey_Series.Champions
                     !x.HasBuff("BarbedHuskBuff") && !x.HasBuff("BulwarkBuff") && !x.HasBuff("DivineShieldBuff") &&
                     !x.HasBuff("GustBuff") && !x.HasBuff("TimeBenderBuff"));
 
+
+                var MeleeRange = 2.5f;
+
                 var selfToTarget = EntitiesManager.LocalTeam.Where(x => x.IsLocalPlayer && !x.Living.IsDead && !x.PhysicsCollision.IsImmaterial);
                 var alliesToTarget = EntitiesManager.LocalTeam.Where(x => !x.Living.IsDead && !x.PhysicsCollision.IsImmaterial);
                 var alliesETarget = TargetSelector.GetTarget(alliesToTarget, TargetingMode.NearMouse, M2.Range);
 
+                var enemiesToTargetA = enemiesToTargetBase.Where(x => x.Distance(alliesETarget) <= MeleeRange + 0.5f);
                 var enemiesToTargetEA = enemiesToTargetBase.Where(x => x.Distance(alliesETarget) <= E.Radius * 1.5);
 
                 var M1Target = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, M1.Range);
                 var M2Target = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, M2.Range);
-                var QSelf = TargetSelector.GetTarget(selfToTarget, TargetingMode.NearMouse, Q.Range);
+                var QAllies = TargetSelector.GetTarget(enemiesToTargetA, TargetingMode.NearMouse, Q.Range);
                 var ETarget = TargetSelector.GetTarget(enemiesToTargetBase, TargetingMode.NearMouse, E.Range);
                 var EATarget = TargetSelector.GetTarget(enemiesToTargetEA, TargetingMode.NearMouse, E.Range);
                 var SpaceTarget = EntitiesManager.EnemyTeam.Where(x => x.Distance(Utility.Player) <= Space.Radius).OrderBy(x => x.Distance(Utility.Player)).FirstOrDefault();
@@ -286,15 +290,11 @@ namespace Kavey_Series.Champions
                         }, 0.15f);
                         return;
                     }
-                    if (QSelf != null && Q.CanCast && Combo.Get<MenuCheckBox>("combo.qself"))
+                    if (QAllies != null && Q.CanCast && Combo.Get<MenuCheckBox>("combo.qallies"))
                     {
-                        var safeRange = Q.Range;
-                        if (QSelf.EnemiesAroundAlive(safeRange) > 0)
-                        {
-                            LocalPlayer.PressAbility(Q.Slot, true);
-                            CastingAbility = Q;
-                            return;
-                        }
+                        LocalPlayer.PressAbility(Q.Slot, true);
+                        CastingAbility = Q;
+                        return;
                     }
                     if (FTarget != null && F.CanCast && Combo.Get<MenuCheckBox>("combo.f"))
                     {
@@ -383,9 +383,9 @@ namespace Kavey_Series.Champions
                             }
                             break;
                         case AbilityKey.Q:
-                            if (QSelf != null)
+                            if (QAllies != null)
                             {
-                                LocalPlayer.Aim(LocalPlayer.Instance.MapObject.Position);
+                                LocalPlayer.Aim(QAllies.MapObject.Position);
                             }
                             else
                             {
