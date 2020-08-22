@@ -115,10 +115,10 @@ namespace Kavey_Series.Champions
                 Combo.Add(new MenuCheckBox("combo.useM2", "Use Right Mouse", true));
                 Combo.Add(new MenuCheckBox("combo.useSpace", "Use Space", true));
                 Combo.Add(new MenuCheckBox("combo.useQ", "Use Q", true));
-                Combo.Add(new MenuCheckBox("combo.useE", "Use E", true));
+                Combo.Add(new MenuCheckBox("combo.useE", "Use E", false));
                 Combo.Add(new MenuCheckBox("combo.useR", "Use R", true));
                 Combo.Add(new MenuCheckBox("combo.useEX2", "Use EX2", true));
-                Combo.Add(new MenuIntSlider("combo.useEX2.minEnergyBars", "    ^ Min energy bars", 1, 4, 1));
+                Combo.Add(new MenuIntSlider("combo.useEX2.minEnergyBars", "    ^ Min energy bars", 2, 4, 1));
                 Combo.Add(new MenuCheckBox("combo.useF", "Use F", false));
             }
             //Misc
@@ -260,6 +260,7 @@ namespace Kavey_Series.Champions
                     !x.HasBuff("GustBuff") && !x.HasBuff("TimeBenderBuff"));
 
                 var enemiesToTargetQ = enemiesToTargetProjs.Where(x => x.Distance(HeroPlayer) <= Q.Range);
+                var enemiesToTargetE = enemiesToTargetBase.Where(x => x.CCTotalDuration >= 1f && x.HasBuff("Incapacitate") || x.HasBuff("Stun") || x.IsCCd());
                 var enemiesToTargetM1Space = enemiesToTargetProjs.Where(x => (x.Distance(HeroPlayer) >= 3.5f));
                 var ennemiesToTargetEX2 = enemiesToTargetBase.Where(x => x.HasBuff("StormStruckDebuff"));
                 var enemiesToExecuteM2M1 = enemiesToTargetProjs.Where(x => x.Living.Health <= M2M1Damage);
@@ -269,7 +270,7 @@ namespace Kavey_Series.Champions
                 var M1SpaceTarget = TargetSelector.GetTarget(enemiesToTargetM1Space, TargetingMode.NearMouse, M1.Range + 1.5f);
                 var M2Target = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, M2.Range);
                 var QTarget = TargetSelector.GetTarget(enemiesToTargetQ, TargetingMode.NearMouse, Q.Range);
-                var ETarget = TargetSelector.GetTarget(enemiesToTargetBase, TargetingMode.NearMouse, E.Range);
+                var ETarget = TargetSelector.GetTarget(enemiesToTargetE, TargetingMode.NearMouse, E.Range);
                 var FTarget = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, F.Range);
                 var EX2Target = TargetSelector.GetTarget(ennemiesToTargetEX2, TargetingMode.NearMouse, EX2.Range);
                 var M2M1Execute = TargetSelector.GetTarget(enemiesToExecuteM2M1, TargetingMode.LowestHealth, E.Range);
@@ -340,7 +341,7 @@ namespace Kavey_Series.Champions
                         return;
                     }
 
-                    if (ETarget != null && !M2.CanCastAbility(6) && E.CanCast && Combo.GetBoolean("combo.useE"))
+                    if (ETarget != null && !M2.CanCastAbility(5) && E.CanCast && Combo.GetBoolean("combo.useE"))
                     {
                         LocalPlayer.PressAbility(E.Slot, true);
                         CastingAbility = E;
