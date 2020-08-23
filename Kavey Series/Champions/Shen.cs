@@ -290,10 +290,10 @@ namespace Kavey_Series.Champions
                 var enemiesToTargetQ = enemiesToTargetProjs.Where(x => x.Distance(HeroPlayer) <= Q.Range);
                 var enemiesToTargetE = enemiesToTargetBase.Where(x => x.CCTotalDuration >= 1.5f && x.HasBuff("Incapacitate") || x.HasBuff("Stun") || x.IsCCd());
                 var enemiesToTargetM1Space = enemiesToTargetProjs.Where(x => x.Distance(HeroPlayer) >= 3.5f);
-                var enemiesToTargetEX2Space = enemiesToTargetBase.Where(x => x.Distance(HeroPlayer) <= 4.5f);
+                var enemiesToTargetEX2Space = enemiesToTargetBase.Where(x => x.Distance(HeroPlayer) <= 4f);
                 var ennemiesToTargetEX2 = enemiesToTargetBase.Where(x => x.HasBuff("StormStruckDebuff"));
                 var enemiesToExecuteM2M1 = enemiesToTargetProjs.Where(x => x.Living.Health <= M2M1Damage);
-                var enemiesToExcuteEX2 = enemiesToTargetBase.Where(x => x.Living.Health <= EX2Damage && x.Distance(HeroPlayer) <= 4.5f);
+                var enemiesToExcuteEX2 = enemiesToTargetBase.Where(x => x.Living.Health <= EX2Damage && x.Distance(HeroPlayer) <= 4f);
 
                 var M1Target = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, M1.Range);
                 var M1SpaceTarget = TargetSelector.GetTarget(enemiesToTargetM1Space, TargetingMode.NearMouse, M1.Range + 1.5f);
@@ -327,13 +327,9 @@ namespace Kavey_Series.Champions
 
                     if (HasJudgementUpgrade && IsInTheAir && ESpaceTarget != null && E.CanCast && Combo.GetBoolean("combo.useE") && Misc.GetBoolean("misc.useEEX2air"))
                     {
-                        var energyMaximum = 1;
-                        if (energyMaximum >= HeroPlayer.Energized.Energy)
-                        {
-                            LocalPlayer.PressAbility(E.Slot, true);
-                            CastingAbility = E;
-                            return;
-                        }
+                        LocalPlayer.PressAbility(E.Slot, true);
+                        CastingAbility = E;
+                        return;
                     }
 
                     if (IsInTheAir && M1SpaceTarget != null && M1.CanCast && Combo.GetBoolean("combo.useM1"))
