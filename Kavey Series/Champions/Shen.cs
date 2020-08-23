@@ -327,9 +327,13 @@ namespace Kavey_Series.Champions
 
                     if (HasJudgementUpgrade && IsInTheAir && ESpaceTarget != null && E.CanCast && Combo.GetBoolean("combo.useE") && Misc.GetBoolean("misc.useEEX2air"))
                     {
-                        LocalPlayer.PressAbility(E.Slot, true);
-                        CastingAbility = E;
-                        return;
+                        var energyMaximum = 1;
+                        if (energyMaximum >= HeroPlayer.Energized.Energy)
+                        {
+                            LocalPlayer.PressAbility(E.Slot, true);
+                            CastingAbility = E;
+                            return;
+                        }
                     }
 
                     if (IsInTheAir && M1SpaceTarget != null && M1.CanCast && Combo.GetBoolean("combo.useM1"))
