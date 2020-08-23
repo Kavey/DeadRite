@@ -271,11 +271,11 @@ namespace Kavey_Series.Champions
                 alliesToTargetBase.Where(x => x.Living.Health <= x.Living.MaxRecoveryHealth - RHeal);
 
                 var enemiesToTargetBase = EntitiesManager.EnemyTeam.Where(x => x.IsValid && !x.Living.IsDead && !x.IsTraveling && !x.IsDashing &&
-                   !x.HasBuff("OtherSideBuff") && !x.HasBuff("AscensionBuff") && !x.HasBuff("AscensionTravelBuff") && !x.HasBuff("Fleetfoot") &&
-                   !x.HasBuff("ValiantLeap") && !x.HasBuff("FrogLeap") && !x.HasBuff("FrogLeapRecast") && !x.HasBuff("ElusiveStrikeCharged") &&
-                   !x.HasBuff("ElusiveStrikeWall2") && !x.HasBuff("BurrowAlternate") && !x.HasBuff("JetPack") && !x.HasBuff("ProwlBuff") &&
+                   !x.HasBuff("ArenaJumpPadSkyDive") && !x.HasBuff("OtherSideBuff") && !x.HasBuff("AscensionBuff") && !x.HasBuff("AscensionTravelBuff") && !x.HasBuff("WarStomp") &&
+                   !x.HasBuff("ValiantLeap") && !x.HasBuff("FrogLeap") && !x.HasBuff("FrogLeapRecast") && !x.HasBuff("ElusiveStrikeCharged") && !x.HasBuff("ExtendedShieldDash") &&
+                   !x.HasBuff("ElusiveStrikeWall2") && !x.HasBuff("BurrowAlternate") && !x.HasBuff("JetPack") && !x.HasBuff("ProwlBuff") && !x.HasBuff("Fleetfoot") &&
                    !x.HasBuff("Dive") && !x.HasBuff("InfestingBuff") && !x.HasBuff("PortalBuff") && !x.HasBuff("CrushingBlow") && !x.HasBuff("TempestRushBuff") &&
-                   !x.HasBuff("TornadoBuff") && !x.HasBuff("LawBringerInAir") && !x.HasBuff("LawBringerLeap") && !x.HasBuff("JawsSwallowedDebuff"));
+                   !x.HasBuff("TornadoBuff") && !x.HasBuff("LawBringerInAir") && !x.HasBuff("LawBringerLeap") && !x.HasBuff("JawsSwallowedDebuff") && !x.HasBuff("IceBlock"));
 
                 if (!Combo.GetBoolean("combo.invisible"))
                 {
@@ -289,11 +289,11 @@ namespace Kavey_Series.Champions
 
                 var enemiesToTargetQ = enemiesToTargetProjs.Where(x => x.Distance(HeroPlayer) <= Q.Range);
                 var enemiesToTargetE = enemiesToTargetBase.Where(x => x.CCTotalDuration >= 1.5f && x.HasBuff("Incapacitate") || x.HasBuff("Stun") || x.IsCCd());
-                var enemiesToTargetM1Space = enemiesToTargetProjs.Where(x => x.Distance(HeroPlayer) >= 3.5f);
-                var enemiesToTargetEX2Space = enemiesToTargetBase.Where(x => x.Distance(HeroPlayer) <= 4f);
+                var enemiesToTargetM1Space = enemiesToTargetBase.Where(x => x.Distance(HeroPlayer) >= 3.5f);
+                var enemiesToTargetEX2Space = enemiesToTargetBase.Where(x => x.Distance(HeroPlayer) <= 3f);
                 var ennemiesToTargetEX2 = enemiesToTargetBase.Where(x => x.HasBuff("StormStruckDebuff"));
                 var enemiesToExecuteM2M1 = enemiesToTargetProjs.Where(x => x.Living.Health <= M2M1Damage);
-                var enemiesToExcuteEX2 = enemiesToTargetBase.Where(x => x.Living.Health <= EX2Damage && x.Distance(HeroPlayer) <= 4f);
+                var enemiesToExcuteEX2 = enemiesToTargetBase.Where(x => x.Living.Health <= EX2Damage && x.Distance(HeroPlayer) <= 3f);
 
                 var M1Target = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, M1.Range);
                 var M1SpaceTarget = TargetSelector.GetTarget(enemiesToTargetM1Space, TargetingMode.NearMouse, M1.Range + 1.5f);
@@ -305,9 +305,9 @@ namespace Kavey_Series.Champions
                 var EX2SpaceTarget = TargetSelector.GetTarget(enemiesToTargetEX2Space, TargetingMode.NearMouse, EX2.Range);
                 var FTarget = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, F.Range);
                 var EX2Target = TargetSelector.GetTarget(ennemiesToTargetEX2, TargetingMode.NearMouse, EX2.Range);
-                var M2M1Execute = TargetSelector.GetTarget(enemiesToExecuteM2M1, TargetingMode.LowestHealth, E.Range);
-                var EX2Execute = TargetSelector.GetTarget(enemiesToExcuteEX2, TargetingMode.LowestHealth, EX2.Range);
-                var RAllies = TargetSelector.GetTarget(alliesToTargetR, TargetingMode.Closest, R.Range);
+                var M2M1Execute = TargetSelector.GetTarget(enemiesToExecuteM2M1, TargetingMode.NearMouse, E.Range);
+                var EX2Execute = TargetSelector.GetTarget(enemiesToExcuteEX2, TargetingMode.NearMouse, EX2.Range);
+                var RAllies = TargetSelector.GetTarget(alliesToTargetR, TargetingMode.NearMouse, R.Range);
 
                 if (!Channeling)
                 {
@@ -325,14 +325,15 @@ namespace Kavey_Series.Champions
                         }
                     }
 
-                    if (HasJudgementUpgrade && IsInTheAir && ESpaceTarget != null && E.CanCast && Combo.GetBoolean("combo.useE") && Misc.GetBoolean("misc.useEEX2air"))
+                    if (HasJudgementUpgrade && IsInTheAir && ESpaceTarget != null && E.CanCast && (!EX2.CanCast || !M2.CanCastAbility(5)) &&
+                        Combo.GetBoolean("combo.useE") && Misc.GetBoolean("misc.useEEX2air"))
                     {
                         LocalPlayer.PressAbility(E.Slot, true);
                         CastingAbility = E;
                         return;
                     }
 
-                    if (IsInTheAir && M1SpaceTarget != null && M1.CanCast && Combo.GetBoolean("combo.useM1"))
+                    if (IsInTheAir && M1SpaceTarget != null && M1.CanCast && !E.CanCast && Combo.GetBoolean("combo.useM1"))
                     {
                         LocalPlayer.PressAbility(M1.Slot, true);
                         CastingAbility = M1;
@@ -393,7 +394,7 @@ namespace Kavey_Series.Champions
                         return;
                     }
 
-                    if (ETarget != null && !M2.CanCastAbility(5) && E.CanCast && Combo.GetBoolean("combo.useE"))
+                    if (ETarget != null && !IsInTheAir && !M2.CanCastAbility(5) && E.CanCast && Combo.GetBoolean("combo.useE"))
                     {
                         LocalPlayer.PressAbility(E.Slot, true);
                         CastingAbility = E;
@@ -407,7 +408,7 @@ namespace Kavey_Series.Champions
                         return;
                     }
 
-                    if (M1Target != null && M1.CanCast && Combo.GetBoolean("combo.useM1"))
+                    if (M1Target != null && !IsInTheAir && M1.CanCast && Combo.GetBoolean("combo.useM1"))
                     {
                         LocalPlayer.PressAbility(M1.Slot, true);
                         CastingAbility = M1;
@@ -434,7 +435,7 @@ namespace Kavey_Series.Champions
                             case AbilityKey.E:
                                 if (HasJudgementUpgrade && ESpaceTarget != null)
                                 {
-                                    var pred = TestPrediction.GetPrediction(Utility.MyPos, ESpaceTarget, E.Range, E.Speed, E.Radius, 0.6f);
+                                    var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, ESpaceTarget, E.Range, E.Speed, E.Radius);
                                     if (pred.CanHit)
                                         LocalPlayer.Aim(pred.CastPosition);
                                 }
@@ -459,11 +460,7 @@ namespace Kavey_Series.Champions
                         case AbilityKey.EX2:
                             if (EX2Execute != null)
                             {
-                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, EX2Execute, EX2.Range, EX2.Speed, EX2.Radius);
-                                if (pred.CanHit)
-                                    LocalPlayer.Aim(pred.CastPosition);
-                                else
-                                    LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
+                                LocalPlayer.Aim(EX2Target.MapObject.Position);
                             }
                             else if (EX2Target != null)
                             {
@@ -477,15 +474,9 @@ namespace Kavey_Series.Champions
                         case AbilityKey.E:
                             if (ETarget != null)
                             {
-                                var pred = TestPrediction.GetPrediction(Utility.MyPos, ETarget, E.Range, E.Speed, E.Radius, 0.6f);
+                                var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, ETarget, E.Range, E.Speed, E.Radius);
                                 if (pred.CanHit)
                                     LocalPlayer.Aim(pred.CastPosition);
-                                else
-                                    LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
-                            }
-                            else
-                            {
-                                LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
                             }
                             break;
 
