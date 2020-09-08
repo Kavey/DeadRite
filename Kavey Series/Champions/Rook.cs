@@ -162,7 +162,7 @@ namespace Kavey_Series.Champions
                                                                             x.ChampionEnum == Champion.Freya || x.ChampionEnum == Champion.Jamila ||
                                                                             x.ChampionEnum == Champion.Raigon || x.ChampionEnum == Champion.Rook ||
                                                                             x.ChampionEnum == Champion.RuhKaan || x.ChampionEnum == Champion.Shifu ||
-                                                                            x.ChampionEnum == Champion.Thorn)
+                                                                            x.ChampionEnum == Champion.Thorn || x.ChampionEnum == Champion.Sirius || x.ChampionEnum == Champion.Ulric)
                                                    && x.Distance(HeroPlayer) <= MeleeRange && x.AbilitySystem.IsCasting);
 
                 var M1Target = TargetSelector.GetTarget(enemiesToTargetProjs, TargetingMode.NearMouse, M1.Range);
