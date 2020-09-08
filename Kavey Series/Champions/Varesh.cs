@@ -319,7 +319,7 @@ namespace Kavey_Series.Champions
                     LocalPlayer.EditAimPosition = false;
                     CastingAbility = null;
 
-                    if (!toggleAiming)
+                    if (toggleAiming)
                     {
                         if (QTarget != null && IsInWuju)
                         {
