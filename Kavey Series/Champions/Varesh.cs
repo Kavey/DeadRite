@@ -102,7 +102,7 @@ namespace Kavey_Series.Champions
                 Keys = new Menu("varesh.keys", "Keys", true);
                 Keys.Add(new MenuKeybind("keys.combo", "Combo Key", UnityEngine.KeyCode.Mouse0));
                 Keys.Add(new MenuCheckBox("keys.autoCombo", "Auto Combo Mode", true));
-                Keys.Add(new MenuKeybind("keys.toggleAiming", "Enable/Disable Aiming", UnityEngine.KeyCode.Y, true, true));
+                Keys.Add(new MenuKeybind("keys.toggleAiming", "Enable/Disable Aiming", UnityEngine.KeyCode.Mouse3, true, true));
                 Keys.Add(new MenuKeybind("keys.M1", "Left Mouse keybind to pause Auto Combo", UnityEngine.KeyCode.Mouse2));
                 Keys.Add(new MenuKeybind("keys.M2", "Right Mouse keybind to pause Auto Combo", UnityEngine.KeyCode.Alpha1));
                 Keys.Add(new MenuKeybind("keys.R", "R keybind to pause Auto Combo", UnityEngine.KeyCode.R));
@@ -319,25 +319,28 @@ namespace Kavey_Series.Champions
                     LocalPlayer.EditAimPosition = false;
                     CastingAbility = null;
 
-                    if (QTarget != null && IsInWuju)
+                    if (!toggleAiming)
                     {
-                       LocalPlayer.Aim(QTarget.MapObject.Position);
-                       return;
-                    }
+                        if (QTarget != null && IsInWuju)
+                        {
+                           LocalPlayer.Aim(QTarget.MapObject.Position);
+                           return;
+                        }
 
-                    if (RTarget != null && IsInTheAir)
-                    {
-                        var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, RTarget, R.Range, R.Speed,
-                            R.Radius);
-                        if (pred.CanHit)
-                            LocalPlayer.Aim(pred.CastPosition);
-                        return;
-                    }
+                        if (RTarget != null && IsInTheAir)
+                        {
+                            var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, RTarget, R.Range, R.Speed,
+                                R.Radius);
+                            if (pred.CanHit)
+                                LocalPlayer.Aim(pred.CastPosition);
+                            return;
+                        }
 
-                    if (FTarget != null && IsInUltimate)
-                    {
-                        LocalPlayer.Aim(FTarget.MapObject.Position);
-                        return;
+                        if (FTarget != null && IsInUltimate)
+                        {
+                            LocalPlayer.Aim(FTarget.MapObject.Position);
+                            return;
+                        }
                     }
 
                     if (QSelf != null && Q.CanCast && Misc.GetBoolean("misc.useQ"))
