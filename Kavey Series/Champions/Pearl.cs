@@ -109,6 +109,7 @@ namespace Kavey_Series.Champions
                 Keys.Add(new MenuKeybind("keys.combo", "Combo Key", KeyCode.Y));
                 Keys.Add(new MenuKeybind("keys.healSelf", "Heal self", KeyCode.LeftControl));
                 Keys.Add(new MenuCheckBox("keys.autoCombo", "Auto Combo Mode", true));
+                Keys.Add(new MenuKeybind("keys.toggleAiming", "Enable/Disable Aiming", UnityEngine.KeyCode.Y, true, true));
                 Keys.Add(new MenuKeybind("keys.M1", "Left Mouse keybind to pause Auto Combo", KeyCode.Mouse2));
                 Keys.Add(new MenuKeybind("keys.M2", "Right Mouse keybind to pause Auto Combo", KeyCode.Mouse1));
                 Keys.Add(new MenuKeybind("keys.Space", "Space keybind to pause Auto Combo", KeyCode.Space));
@@ -259,17 +260,8 @@ namespace Kavey_Series.Champions
 
             if (HeroPlayer.Living.IsDead) return;
 
-            // if (Channeling)
-            // {
-            //     Drawing.DrawString(new Vector2(1920f / 2f, (1080f / 2f) - 45f).ScreenToWorld(),
-            //         "CASTING OR CHANNELING", Color.red);
-            // }
-
-            // if (IsWeaponCharged)
-            // {
-            //     Drawing.DrawString(new Vector2(1920f / 2f, (1080f / 2f) - 5f).ScreenToWorld(),
-            //         "WEAPON IS CHARGED!", Color.magenta);
-            // }
+            Drawing.DrawString(new Vector2(1920f / 2f, 1080f / 2f - 5f).ScreenToWorld(),
+                 "Aiming: " + (Keys.GetKeybind("keys.toggleAiming") ? "ON" : "OFF"), Color.white);
 
             if (Drawings.GetBoolean("draw.rangeM1.safeRange")) Drawing.DrawCircle(Utility.MyPos, M1.Range, Color.white);
 
@@ -305,6 +297,9 @@ namespace Kavey_Series.Champions
                 CastingAbility = null;
                 return;
             }
+
+            var toggle = Keys.GetKeybind("keys.toggleAiming");
+            var toggleAiming = toggle ? true : false;
 
             var enemiesToTargetBase = EntitiesManager.EnemyTeam.Where(x => x.IsValid && !x.Living.IsDead && !x.IsTraveling && !x.IsDashing &&
                !x.HasBuff("ArenaJumpPadSkyDive") && !x.HasBuff("OtherSideBuff") && !x.HasBuff("AscensionBuff") && !x.HasBuff("AscensionTravelBuff") && !x.HasBuff("WarStomp") &&
@@ -537,6 +532,8 @@ namespace Kavey_Series.Champions
                 }
                 else
                 {
+                    if (!toggleAiming)
+                        return;
                     if (CastingAbility == null)
                         CastingAbility = GetAbilityFromIndex(Utility.Player.AbilitySystem.CastingAbilityIndex);
                     if (CastingAbility == null)

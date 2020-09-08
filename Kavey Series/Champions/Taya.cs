@@ -15,6 +15,8 @@ using Kavey_Series.Prediction;
 using Kavey_Series.Utilities;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
+using Vector2 = BattleRight.Core.Math.Vector2;
+using Ability = Kavey_Series.Abilities.Ability;
 
 namespace Kavey_Series.Champions
 {
@@ -97,6 +99,7 @@ namespace Kavey_Series.Champions
                 Keys = new Menu("taya.keys", "Keys", true);
                 Keys.Add(new MenuKeybind("keys.combo", "Combo Key", UnityEngine.KeyCode.Mouse0));
                 Keys.Add(new MenuCheckBox("keys.autoCombo", "Auto Combo Mode", true));
+                Keys.Add(new MenuKeybind("keys.toggleAiming", "Enable/Disable Aiming", UnityEngine.KeyCode.Y, true, true));
                 Keys.Add(new MenuKeybind("keys.M1", "Left Mouse keybind to pause Auto Combo", UnityEngine.KeyCode.Mouse2));
                 Keys.Add(new MenuKeybind("keys.M2", "Right Mouse keybind to pause Auto Combo", UnityEngine.KeyCode.Mouse1));
                 Keys.Add(new MenuKeybind("keys.R", "R keybind to pause Auto Combo", UnityEngine.KeyCode.R));
@@ -116,7 +119,7 @@ namespace Kavey_Series.Champions
                 Combo.Add(new MenuCheckBox("combo.useQ", "Use Q", true));
                 Combo.Add(new MenuCheckBox("combo.hasteQ", " ^ Only with Haste", true));
                 Combo.Add(new MenuCheckBox("combo.useE", "Use E", true));
-                Combo.Add(new MenuCheckBox("combo.useEX1", "Use EX1", true));
+                Combo.Add(new MenuCheckBox("combo.useEX1", "Use EX1", false));
                 Combo.Add(new MenuIntSlider("combo.useEX1.minEnergyBars", "    ^ Min energy bars", 3, 4, 1));
                 Combo.Add(new MenuCheckBox("combo.useEX2haste", "Use EX2 with Haste", true));
                 Combo.Add(new MenuIntSlider("combo.useEX2haste.minEnergyBars", "    ^ Min energy bars", 2, 4, 1));
@@ -217,6 +220,9 @@ namespace Kavey_Series.Champions
                 return;
             }
 
+            Drawing.DrawString(new Vector2(1920f / 2f, 1080f / 2f - 5f).ScreenToWorld(),
+                "Aiming: " + (Keys.GetKeybind("keys.toggleAiming") ? "ON" : "OFF"), Color.white);
+
             if (Drawings.GetBoolean("draw.rangeM1.safeRange"))
             {
 
@@ -246,6 +252,10 @@ namespace Kavey_Series.Champions
 
             if (Keys.GetKeybind("keys.combo") || Keys.GetBoolean("keys.autoCombo"))
             {
+
+                var toggle = Keys.GetKeybind("keys.toggleAiming");
+                var toggleAiming = toggle ? true : false;
+
                 var EX1Damage = 16;
                 var EX2Damage = 14;
 
@@ -394,6 +404,8 @@ namespace Kavey_Series.Champions
                 }
                 else
                 {
+                    if (!toggleAiming)
+                        return;
                     if (CastingAbility == null)
                         CastingAbility = GetAbilityFromIndex(Utility.Player.AbilitySystem.CastingAbilityIndex);
                     if (CastingAbility == null)

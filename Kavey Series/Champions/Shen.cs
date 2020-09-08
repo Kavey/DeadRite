@@ -104,6 +104,7 @@ namespace Kavey_Series.Champions
                 Keys = new Menu("shen.keys", "Keys", true);
                 Keys.Add(new MenuKeybind("keys.combo", "Combo Key", UnityEngine.KeyCode.Mouse0));
                 Keys.Add(new MenuCheckBox("keys.autoCombo", "Auto Combo Mode", true));
+                Keys.Add(new MenuKeybind("keys.toggleAiming", "Enable/Disable Aiming", UnityEngine.KeyCode.Y, true, true));
                 Keys.Add(new MenuKeybind("keys.M1", "Left Mouse keybind to pause Auto Combo", UnityEngine.KeyCode.Mouse2));
                 Keys.Add(new MenuKeybind("keys.M2", "Right Mouse keybind to pause Auto Combo", UnityEngine.KeyCode.Mouse1));
                 Keys.Add(new MenuKeybind("keys.E", "E keybind to pause Auto Combo", UnityEngine.KeyCode.Alpha2));
@@ -163,6 +164,28 @@ namespace Kavey_Series.Champions
             E = new Ability(AbilityKey.E, 7f, 10f, 2f);
             R = new Ability(AbilityKey.R, 3.5f);
             F = new Ability(AbilityKey.F, 13f, 30f, 0.45f);
+        }
+
+        private static bool AllyIsDead
+        {
+            get
+            {
+                if (EntitiesManager.LocalTeam != null)
+                {
+                    foreach (var player in EntitiesManager.LocalTeam)
+                    {
+                        if (player != null)
+                        {
+                            if (true)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+
+                return false;
+            }
         }
 
         private static bool IsInUltimate
@@ -230,6 +253,9 @@ namespace Kavey_Series.Champions
                 return;
             }
 
+            Drawing.DrawString(new Vector2(1920f / 2f, 1080f / 2f - 5f).ScreenToWorld(),
+                "Aiming: " + (Keys.GetKeybind("keys.toggleAiming") ? "ON" : "OFF"), Color.white);
+
             if (Drawings.GetBoolean("draw.rangeM1.safeRange"))
             {
                 Drawing.DrawCircle(Utility.MyPos, M1.Range, Color.yellow);
@@ -258,6 +284,9 @@ namespace Kavey_Series.Champions
 
             if (Keys.GetKeybind("keys.combo") || Keys.GetBoolean("keys.autoCombo"))
             {
+                var toggle = Keys.GetKeybind("keys.toggleAiming");
+                var toggleAiming = toggle ? true : false;
+
                 var M2M1Damage = 26;
                 var EX2Damage = 40;
 
@@ -276,6 +305,8 @@ namespace Kavey_Series.Champions
                    !x.HasBuff("ElusiveStrikeWall2") && !x.HasBuff("BurrowAlternate") && !x.HasBuff("JetPack") && !x.HasBuff("ProwlBuff") && !x.HasBuff("Fleetfoot") &&
                    !x.HasBuff("Dive") && !x.HasBuff("InfestingBuff") && !x.HasBuff("PortalBuff") && !x.HasBuff("CrushingBlow") && !x.HasBuff("TempestRushBuff") &&
                    !x.HasBuff("TornadoBuff") && !x.HasBuff("LawBringerInAir") && !x.HasBuff("LawBringerLeap") && !x.HasBuff("JawsSwallowedDebuff") && !x.HasBuff("IceBlock"));
+
+                //SiriusCounterInAir / SiriusSpace / Raigon Ult
 
                 if (!Combo.GetBoolean("combo.invisible"))
                 {
@@ -307,7 +338,7 @@ namespace Kavey_Series.Champions
                 var EX2Target = TargetSelector.GetTarget(ennemiesToTargetEX2, TargetingMode.NearMouse, EX2.Range);
                 var M2M1Execute = TargetSelector.GetTarget(enemiesToExecuteM2M1, TargetingMode.NearMouse, E.Range);
                 var EX2Execute = TargetSelector.GetTarget(enemiesToExcuteEX2, TargetingMode.NearMouse, EX2.Range);
-                var RAllies = TargetSelector.GetTarget(alliesToTargetR, TargetingMode.NearMouse, R.Range);
+                var RAllies = TargetSelector.GetAlly(alliesToTargetR, TargetingMode.NearMouse, R.Range);
 
                 if (!Channeling)
                 {
@@ -333,7 +364,7 @@ namespace Kavey_Series.Champions
                         return;
                     }
 
-                    if (IsInTheAir && M1SpaceTarget != null && M1.CanCast && !E.CanCast && Combo.GetBoolean("combo.useM1"))
+                    if (IsInTheAir && M1SpaceTarget != null && M1.CanCast && Combo.GetBoolean("combo.useM1"))
                     {
                         LocalPlayer.PressAbility(M1.Slot, true);
                         CastingAbility = M1;
@@ -416,6 +447,8 @@ namespace Kavey_Series.Champions
                 }
                 else
                 {
+                    if (!toggleAiming)
+                        return;
                     if (CastingAbility == null)
                         CastingAbility = GetAbilityFromIndex(Utility.Player.AbilitySystem.CastingAbilityIndex);
                     if (CastingAbility == null)

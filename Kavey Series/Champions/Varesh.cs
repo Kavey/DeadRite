@@ -102,6 +102,7 @@ namespace Kavey_Series.Champions
                 Keys = new Menu("varesh.keys", "Keys", true);
                 Keys.Add(new MenuKeybind("keys.combo", "Combo Key", UnityEngine.KeyCode.Mouse0));
                 Keys.Add(new MenuCheckBox("keys.autoCombo", "Auto Combo Mode", true));
+                Keys.Add(new MenuKeybind("keys.toggleAiming", "Enable/Disable Aiming", UnityEngine.KeyCode.Y, true, true));
                 Keys.Add(new MenuKeybind("keys.M1", "Left Mouse keybind to pause Auto Combo", UnityEngine.KeyCode.Mouse2));
                 Keys.Add(new MenuKeybind("keys.M2", "Right Mouse keybind to pause Auto Combo", UnityEngine.KeyCode.Alpha1));
                 Keys.Add(new MenuKeybind("keys.R", "R keybind to pause Auto Combo", UnityEngine.KeyCode.R));
@@ -222,6 +223,9 @@ namespace Kavey_Series.Champions
                 return;
             }
 
+            Drawing.DrawString(new Vector2(1920f / 2f, 1080f / 2f - 5f).ScreenToWorld(),
+                "Aiming: " + (Keys.GetKeybind("keys.toggleAiming") ? "ON" : "OFF"), Color.white);
+
             if (Drawings.GetBoolean("draw.rangeM1.safeRange"))
             {
 
@@ -251,6 +255,10 @@ namespace Kavey_Series.Champions
 
             if (Keys.GetKeybind("keys.combo") || Keys.GetBoolean("keys.autoCombo"))
             {
+
+                var toggle = Keys.GetKeybind("keys.toggleAiming");
+                var toggleAiming = toggle ? true : false;
+
                 var EX1Damage = 16;
                 var EX2Damage = 12;
 
@@ -416,6 +424,8 @@ namespace Kavey_Series.Champions
                 }
                 else
                 {
+                    if (!toggleAiming)
+                        return;
                     if (CastingAbility == null)
                         CastingAbility = GetAbilityFromIndex(Utility.Player.AbilitySystem.CastingAbilityIndex);
                     if (CastingAbility == null)
@@ -515,9 +525,9 @@ namespace Kavey_Series.Champions
                             {
                                 var pred = TestPrediction.GetNormalLinePrediction(Utility.MyPos, M1Target, M1.Range, M1.Speed, M1.Radius, true);
                                 if (pred.CanHit)
-                                    LocalPlayer.Aim(pred.CastPosition);
+                                      LocalPlayer.Aim(pred.CastPosition);
                                 else if (Combo.GetBoolean("combo.interruptM1"))
-                                    LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
+                                      LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
                             }
                             else if (Combo.GetBoolean("combo.interruptM1"))
                             {

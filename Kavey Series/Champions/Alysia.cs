@@ -15,6 +15,7 @@ using Kavey_Series.Prediction;
 using Kavey_Series.Utilities;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
+using Vector2 = BattleRight.Core.Math.Vector2;
 
 namespace Kavey_Series.Champions
 {
@@ -110,6 +111,7 @@ namespace Kavey_Series.Champions
                 Keys = new Menu("alysia.keys", "Keys", true);
                 Keys.Add(new MenuKeybind("keys.combo", "Combo", KeyCode.Mouse0));
                 Keys.Add(new MenuCheckBox("keys.autoCombo", "Auto Combo", true));
+                Keys.Add(new MenuKeybind("keys.toggleAiming", "Enable/Disable Aiming", UnityEngine.KeyCode.Y, true, true));
                 Keys.Add(new MenuKeybind("keys.m1", "Left Mouse Keybind to stop Auto Combo", KeyCode.Mouse2));
                 Keys.Add(new MenuKeybind("keys.q", "Q Keybind to stop Auto Combo", KeyCode.Alpha1));
                 Keys.Add(new MenuKeybind("keys.e", "E Keybind to stop Auto Combo", KeyCode.Alpha2));
@@ -208,6 +210,9 @@ namespace Kavey_Series.Champions
 
         private void Game_OnDraw(EventArgs args)
         {
+            Drawing.DrawString(new Vector2(1920f / 2f, 1080f / 2f - 5f).ScreenToWorld(),
+            "Aiming: " + (Keys.GetKeybind("keys.toggleAiming") ? "ON" : "OFF"), Color.white);
+
             if (Drawings.Get<MenuCheckBox>("drawings.m1"))
                 Drawing.DrawCircle(Utility.MyPos, M1.Range, Color.white);
             if (Drawings.Get<MenuCheckBox>("drawings.m2"))
@@ -235,6 +240,9 @@ namespace Kavey_Series.Champions
             LocalPlayer.EditAimPosition = false;
             if (Keys.Get<MenuKeybind>("keys.combo") || Keys.Get<MenuCheckBox>("keys.autoCombo"))
             {
+                var toggle = Keys.GetKeybind("keys.toggleAiming");
+                var toggleAiming = toggle ? true : false;
+
                 var enemiesToTargetBase = EntitiesManager.EnemyTeam.Where(x => x.IsValid && !x.Living.IsDead && !x.IsTraveling && !x.IsDashing &&
                    !x.HasBuff("ArenaJumpPadSkyDive") && !x.HasBuff("OtherSideBuff") && !x.HasBuff("AscensionBuff") && !x.HasBuff("AscensionTravelBuff") && !x.HasBuff("WarStomp") &&
                    !x.HasBuff("ValiantLeap") && !x.HasBuff("FrogLeap") && !x.HasBuff("FrogLeapRecast") && !x.HasBuff("ElusiveStrikeCharged") && !x.HasBuff("ExtendedShieldDash") &&
@@ -347,6 +355,8 @@ namespace Kavey_Series.Champions
                 }
                 else
                 {
+                    if (!toggleAiming)
+                        return;
                     if (CastingAbility == null)
                         CastingAbility = GetAbilityFromIndex(Utility.Player.AbilitySystem.CastingAbilityIndex);
                     if (CastingAbility == null)
