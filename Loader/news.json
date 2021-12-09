@@ -1,0 +1,64 @@
+  {
+    "News": [
+      {
+        "Header": "Final update 10/06/2020",
+        "Content": "Core:\n - Added auto offset resolver it should be enough to cover next Battlerites updates.\nSDK:\n - Support for Royale mode is discontinued.\n\nThis was the last BattleRight update, feel free to download binaries before they get removed from the server.\nWe had fun for years, thanks to developpers that helped me building the project to it's current shape.\nSincerely, Kavey"
+      },
+      {
+        "Header": "Stealth Prediction and Tracking 09/12/2018",
+        "Content": "SDK:\n - Added Stealth Tacker.\n - Added Stealth Prediction.\n - Fixed some major Performance issues."
+      },
+      {
+        "Header": "Updates and fixes 09/11/2018",
+        "Content": "Core:\n - Added Drawing.DrawingThickness\n - Fixed a bug with OnDestroy event\nSDK:\n - Added a Slider to change Drawings Thickness\nSandbox:\n - Added Support to load addon into Royale mode."
+      },
+      {
+        "Header": "Performance Improvements 09/08/2018",
+        "Content": "This update Contains changes and fixes to issues that made Addons Perform slower at some cases."
+      },
+      {
+        "Header": "Improved SDK Prediction, Added OnDashEnd and OnTravelEnd events 09/06/2018",
+        "Content": "Core:\n - Added Character.OnDashEnd and Character.OnTravelEnd events.\n - Fixed a possible disconnecting issue.\nSDK:\n - Prediction improvements.\n - Added HitChace.Impossible."
+      },
+      {
+        "Header": "BuffGain and BuffRemoved events moved to Core 09/03/2018",
+        "Content": "Core:\n - OnBuffGain and OnBuffRemoved events moved to Character class.\n - Buffs are now Cached per Character."
+      },
+      {
+        "Header": "Loader Fixes 09/01/2018",
+        "Content": "Loader:\n - Fixed addons drag and drop.\n - Fixed injection loop bug."
+      },
+      {
+        "Header": "Core fixes and Changes 08/29/2018",
+        "Content": "Core:\n - Improved Buff.IsCounter check.\n - Changed Events to Dynamic Invoke.\n - Fixed an Issue With OnMatchStart event."
+      },
+      {
+        "Header": "Performance updates 08/27/2018",
+        "Content": "Major performance updates and bug fixes within the API.\nNow the game will no longer drop frames when you play more games."
+      },
+    {
+        "Header": "New Update 08/25/2018",
+        "Content": "Loader:\n - Visual improvements.\nCore:\n - Fixed some cases where addons would Aim at random Spots.\n - Changed how OnMatchState update works\n - Added GameConsole.ClearConsole.\nSDK:\n - Changed Menu.Children to Array rather than a List."
+      },
+      {
+        "Header": "Quests and Matchmaking(beta) API 08/23/2018",
+        "Content": "Loader:\n - Loader will check for updates before login\nCore:\n - Added Quests API\n - Added Matchmaking API (BETA)\n - Added more Properties to InGameObjects\n - Smooth aiming now is much smoother.\nSDK:\n - Added an option to allow addons to control cursor movement\n - Added Dash and Travel prediction\n - Add Scroll view to Comboboxes(0x4c)"
+      },
+      {
+        "Header": "New Updates and Changes 08/18/2018",
+        "Content": "Core:\n - Added support for more GameObject Models.\n(AoEProjectile, AreaObject, ChannelingObject, CurveProjectile, DashObject, TravelBuffObject, InAirBuffObject, KnockBackObject, ObjectHud, PBAoEObject, PickUpObject and SearingDisplacementObject).\n - Added Character.OnDash and OnTravel.\nSDK:\n - Combobox Elements are more visible now (0x4c).\n - Combobox Elements changed to public.\n - Fixed an issue where some menu values would get lost."
+      },
+      {
+        "Header": "Fixed Core issues and Performance updates 08/15/2018",
+        "Content": "Loader:\n - Added an option to Enable Developer Console Window.\n - Fixed an issue with window 7 users that can't download addons from git.\nCore:\n - Fixed an error that occurs with InGameObjects list.\n - Fixed a possible \"Disconnection\" issue.\n - Added Mods.KeepModelsVisible\nSDK:\n - Fixed \"Keep Players Models visible\" mod"
+      },
+      {
+        "Header": "Updater Improvements and Buffs Detector 08/13/2018",
+        "Content": "Loader:\n - Improved update checks.\nCore:\n - Added Smooth Aiming Feature (Semi-Realistic Aiming).\nSDK:\n - Added Buffs Detector (OnGainBuff and OnRemoveBuff)."
+      },
+      {
+        "Header": "Hello World",
+        "Content": "Loader:\n - Compiler now supports newer versions of C#.\n - Fixed an issue with installing addons using Git.\nCore:\n - Added Mods.HideNames (Hides all Name mentions in-game).\n - Fixed some freezing issues in-game.\nSDK:\n - Added an Option to select a forced Target."
+      }
+    ]
+  }

@@ -1,0 +1,115 @@
+{
+  "Core": {
+    "GameHash": "78e1473d5113fd401236078547cea064",
+    "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/BattleRight.Core.dll",
+    "Hash": "0d8bb20dced2a9cabbe08fc7200f2452",
+    "Path": "System\\BattleRight.Core.dll"
+  },
+  "SystemDependencies": [
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/BattleRight.Loader.exe",
+      "Hash": "670713498f6b23d8c59eb2d0f532001c",
+      "Path": "BattleRight.Loader.exe"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/BattleRight.Loader.exe.config",
+      "Hash": "f802abec266c4d7aea3c5e836d1ebe9f",
+      "Path": "BattleRight.Loader.exe.config"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/BattleRight.Renamer.exe",
+      "Hash": "bc7c09ccd58b2d2bfb3682e66398ab94",
+      "Path": "BattleRight.Renamer.exe"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/BattleRight.Renamer.exe.config",
+      "Hash": "ee3b380704607a4aef7315173e27ac62",
+      "Path": "BattleRight.Renamer.exe.config"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/BattleRight.Helper.dll",
+      "Hash": "76fb3bc269d7f23304b44ae39822e005",
+      "Path": "System\\BattleRight.Helper.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/BattleRight.Injector.dll",
+      "Hash": "4af56fb85cc88d62a422c6cb6f38f589",
+      "Path": "System\\BattleRight.Injector.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/BattleRight.Sandbox.dll",
+      "Hash": "1d7815a4f1f11884d153ba9a684481b5",
+      "Path": "System\\BattleRight.Sandbox.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/BattleRight.SDK.dll",
+      "Hash": "299bd1edaf926efce2c7ff29ba521751",
+      "Path": "System\\BattleRight.SDK.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/BeaEngineCheetah.dll",
+      "Hash": "d01dab22a88772895e26070ff9405ea4",
+      "Path": "System\\BeaEngineCheetah.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/Microsoft.Build.dll",
+      "Hash": "119463713a46eacf12a3c9d4921de99d",
+      "Path": "System\\Microsoft.Build.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/Microsoft.Build.Framework.dll",
+      "Hash": "2a3d651cb547c679912045c2a8b734a9",
+      "Path": "System\\Microsoft.Build.Framework.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/Microsoft.CSharp.dll",
+      "Hash": "225674a015df8c5bc381c3e57b3b8b17",
+      "Path": "System\\Microsoft.CSharp.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/msdia140.dll",
+      "Hash": "86ef052712ca7bd481f09da72815c12e",
+      "Path": "System\\msdia140.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/Newtonsoft.Json.dll",
+      "Hash": "7fbeba898264a9687c59672abb3ce34e",
+      "Path": "System\\Newtonsoft.Json.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/symsrv.dll",
+      "Hash": "54559270b6e12274e07fb547aa415fd4",
+      "Path": "System\\symsrv.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/System.Data.dll",
+      "Hash": "8b18b0b7412d61042a2fac7529dbf35e",
+      "Path": "System\\System.Data.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/System.IdentityModel.dll",
+      "Hash": "924dfaf8d0b634f76152d267ea8b46f9",
+      "Path": "System\\System.IdentityModel.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/System.ServiceModel.dll",
+      "Hash": "206762068c26d202866e0ae62030448a",
+      "Path": "System\\System.ServiceModel.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/System.Transactions.dll",
+      "Hash": "7232f9a8e298f2a3d3c30ede7fc3edf7",
+      "Path": "System\\System.Transactions.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/System.Web.dll",
+      "Hash": "51e64dfaf423bcf0e9b0b4b8a8da09eb",
+      "Path": "System\\System.Web.dll"
+    },
+    {
+      "URL": "https://raw.github.com/BattleRight/BattleRight.Data/master/System/System.Windows.Interactivity.dll",
+      "Hash": "580244bc805220253a87196913eb3e5e",
+      "Path": "System\\System.Windows.Interactivity.dll"
+    }
+  ]
+}
