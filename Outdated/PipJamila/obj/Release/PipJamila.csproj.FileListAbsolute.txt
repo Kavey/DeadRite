@@ -1,0 +1,10 @@
+C:\Users\skaaz\Desktop\1BR\PipJamila\bin\Release\PipJamila.dll
+C:\Users\skaaz\Desktop\1BR\PipJamila\bin\Release\PipJamila.pdb
+C:\Users\skaaz\Desktop\1BR\PipJamila\obj\Release\PipJamila.csprojResolveAssemblyReference.cache
+C:\Users\skaaz\Desktop\1BR\PipJamila\obj\Release\PipJamila.dll
+C:\Users\skaaz\Desktop\1BR\PipJamila\obj\Release\PipJamila.pdb
+C:\Users\Shadow\Desktop\BRiteProfiles\PipJamila\bin\Release\PipJamila.dll
+C:\Users\Shadow\Desktop\BRiteProfiles\PipJamila\bin\Release\PipJamila.pdb
+C:\Users\Shadow\Desktop\BRiteProfiles\PipJamila\obj\Release\PipJamila.csprojResolveAssemblyReference.cache
+C:\Users\Shadow\Desktop\BRiteProfiles\PipJamila\obj\Release\PipJamila.dll
+C:\Users\Shadow\Desktop\BRiteProfiles\PipJamila\obj\Release\PipJamila.pdb

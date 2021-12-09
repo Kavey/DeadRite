@@ -7,8 +7,7 @@ using BattleRight.Core;
 using BattleRight.Core.Models;
 using BattleRight.Core.Enumeration;
 using BattleRight.Core.GameObjects;
-using BattleRight.Core.Math;
-
+using BattleRight.Core.GameObjects.Models;
 using BattleRight.SDK;
 using BattleRight.SDK.Enumeration;
 using BattleRight.SDK.Events;
@@ -22,24 +21,26 @@ using PipLibrary.Extensions;
 using PipLibrary.Utils;
 
 using TestPrediction2NS;
+using UnityEngine;
+using Vector2 = BattleRight.Core.Math.Vector2;
 
-namespace KVTemplate
+namespace KVPearl
 {
-    public class KVTemplate : IAddon
+    public class KVPearl : IAddon
     {
         private static Menu HeroMenu;
         private static Menu KeysMenu, ComboMenu, HealMenu, DrawingsMenu, MiscMenu;
 
         private static Character HeroPlayer => LocalPlayer.Instance;
-        private static readonly string HeroName = "Template";
+        private static readonly string HeroName = "Pearl";
         private static Vector2 MyPos => HeroPlayer.MapObject.Position;
 
         private static AbilitySlot? LastAbilityFired = null;
 
         //Range
-        private const float M1Range = 10f;
-        // private const float M2Range = 0.0f;
-        // private const float SpaceRange = 0.0f;
+        private const float M1Range = 7.2f;
+        private const float M2Range = 10.0f;
+        private const float SpaceRange = 6.5f;
         // private const float QRange = 0.0f;
         // private const float ERange = 0.0f;
         // private const float RRange = 0.0f;
@@ -48,8 +49,8 @@ namespace KVTemplate
         // private const float EX2Range = 0.0f;
 
         //Speed
-        private const float M1Speed = 9f;
-        // private const float M2Speed = 0.0f;
+        private const float M1Speed = 22f;
+        private const float M2Speed = 28.0f;
         // private const float SpaceSpeed = 0.0f;
         // private const float QSpeed = 0.0f;
         // private const float ESpeed = 0.0f;
@@ -59,8 +60,8 @@ namespace KVTemplate
         // private const float EX2Speed = 0.0f;
 
         //Radius
-        private const float M1Radius = 0.6f;
-        // private const float M2Radius = 0.0f;
+        private const float M1Radius = 0.25f;
+        private const float M2Radius = 1.2f;
         // private const float SpaceRadius = 0.0f;
         // private const float QRadius = 0.0f;
         // private const float ERadius = 0.0f;
@@ -80,6 +81,9 @@ namespace KVTemplate
         // private const float FAirTime = 0.0f;
         // private const float EX1AirTime = 0.0f;
         // private const float EX2AirTime = 0.0f;
+
+        //MISC
+        private const float M2Heal = 21f;
 
         private static bool DidMatchInit = false;
 
@@ -124,10 +128,11 @@ namespace KVTemplate
 
         private static void InitMenu()
         {
-            HeroMenu = new Menu("templatemenu", "Kavey's Taya!");
+            HeroMenu = new Menu("templatemenu", "Kavey's Pearl");
 
             KeysMenu = new Menu("keysmenu", "Keys", true);
             KeysMenu.Add(new MenuKeybind("keys.combo", "Combo Key", UnityEngine.KeyCode.Mouse0));
+            KeysMenu.Add(new MenuKeybind("keys.healSelf", "Heal self", UnityEngine.KeyCode.LeftControl));
             KeysMenu.Add(new MenuKeybind("keys.changeTargeting", "Change targeting mode", UnityEngine.KeyCode.Y, false, true));
             KeysMenu.Add(new MenuCheckBox("keys.autoCombo", "Auto Combo Mode", false));
             KeysMenu.Add(new MenuKeybind("keys.Space", "Space keybind to pause Auto Combo", UnityEngine.KeyCode.Space));
@@ -137,6 +142,7 @@ namespace KVTemplate
             ComboMenu.Add(new MenuCheckBox("combo.invisible", "Attack invisible enemies", true));
             ComboMenu.Add(new MenuCheckBox("combo.useM1", "Use Left Mouse", false));
             ComboMenu.Add(new MenuCheckBox("combo.useM2", "Use Right Mouse", false));
+            ComboMenu.Add(new MenuCheckBox("combo.useSpace", "Use Space", false));
             ComboMenu.Add(new MenuCheckBox("combo.useQ", "Use Q", false));
             ComboMenu.Add(new MenuCheckBox("combo.useE", "Use E", false));
             ComboMenu.Add(new MenuCheckBox("combo.useR", "Use R", false));
@@ -147,7 +153,12 @@ namespace KVTemplate
             ComboMenu.Add(new MenuCheckBox("combo.useF", "Use F", false));
             HeroMenu.Add(ComboMenu);
 
-            HealMenu = new Menu("healmenu", "Healing", false);
+            HealMenu = new Menu("healmenu", "Healing", true);
+            HealMenu.AddLabel("Hold Healing key to use");
+            HealMenu.Add(new MenuSlider("heal.allySafeRange", "Target ally safe range", 10f, 10f, 0f));
+            HealMenu.Add(new MenuCheckBox("heal.useM2", "Heal with M2 (Healing Potion)", true));
+            HealMenu.Add(new MenuSlider("heal.useM2.safeRange", "    ^ Safe range", 4f, 10f, 0f));
+            HealMenu.Add(new MenuCheckBox("heal.useM2.fullHP", "    ^ Use even if target ally has full health", false));
             HeroMenu.Add(HealMenu);
 
             MiscMenu = new Menu("miscmenu", "Misc", false);
@@ -166,19 +177,25 @@ namespace KVTemplate
             {
                 return;
             }
-
-            else if (KeysMenu.GetKeybind("keys.Space"))
+            
+            if (KeysMenu.GetKeybind("keys.Space"))
             {
                 LocalPlayer.EditAimPosition = false;
                 LastAbilityFired = null;
             }
 
+            else if (KeysMenu.GetKeybind("keys.healSelf"))
+            {
+                HealSelf();
+            }
             else if (KeysMenu.GetBoolean("keys.autoCombo"))
             {
+                HealOthers();
                 ComboMode();
             }
             else if (KeysMenu.GetKeybind("keys.combo"))
             {
+                HealOthers();
                 ComboMode();
             }
             else
@@ -209,11 +226,12 @@ namespace KVTemplate
             var enemiesToTargetProjs = enemiesToTargetBase.Where(x =>
             !x.IsCountering && !x.HasShield() && !x.HasConsumeBuff && !x.HasParry() && !x.HasBuff("ElectricShield") && !x.HasBuff("BarbedHuskBuff"));
 
+            var targetFish = EntitiesManager.InGameObjects.FirstOrDefault(x => x.ObjectName == "TastyFishObject" && x.IsActiveObject);
+
             var alliesToTargetBase = EntitiesManager.LocalTeam.Where(x => !x.Living.IsDead && !x.PhysicsCollision.IsImmaterial);
 
             var targetM1 = TargetSelector.GetTarget(enemiesToTargetProjs, targetMode, M1Range);
             // var targetM2 = TargetSelector.GetTarget(enemiesToTargetBase, targetMode, M2Range);
-            // var targetSpace = TargetSelector.GetTarget(enemiesToTargetBase, targetMode, SpaceRange);
             // var targetQ = TargetSelector.GetTarget(enemiesToTargetBase, targetMode, QRange);
             // var targetE = TargetSelector.GetTarget(enemiesToTargetBase, targetMode, ERange);
             // var targetR = TargetSelector.GetTarget(enemiesToTargetBase, targetMode, RRange);
@@ -277,7 +295,7 @@ namespace KVTemplate
 
                     // case AbilitySlot.EXAbility2:
                     //     break;
-
+                    
                     // case AbilitySlot.EXAbility1:
                     //     break;
 
@@ -290,8 +308,15 @@ namespace KVTemplate
                     // case AbilitySlot.Ability4:
                     //     break;
 
-                    // case AbilitySlot.Ability3:
-                    //     break;
+                    case AbilitySlot.Ability3:
+                        if (LastAbilityFired == null && targetFish != null)
+                        {
+                            LocalPlayer.PressAbility(AbilitySlot.Ability3, true);
+                            LocalPlayer.EditAimPosition = true;
+                            LocalPlayer.Aim(targetFish.Get<MapGameObject>().Position);
+                            return;
+                        }
+                        break;
 
                     // case AbilitySlot.Ability2:
                     //     break;
@@ -416,25 +441,21 @@ namespace KVTemplate
             //     }
             // }
 
-            // if (ComboMenu.GetBoolean("combo.useSpace") && MiscUtils.CanCast(AbilitySlot.Ability3))
-            // {
-            //     if (LastAbilityFired == null && targetSpace != null)
-            //     {
-            //         var pred = TestPrediction.GetNormalLinePrediction(MyPos, targetSpace, SpaceRange, SpaceSpeed, SpaceRadius, true);
-            //         if (pred.CanHit)
-            //         {
-            //             LocalPlayer.PressAbility(AbilitySlot.Ability3, true);
-            //             LocalPlayer.EditAimPosition = true;
-            //             LocalPlayer.Aim(pred.CastPosition);
-            //             return;
-            //         }
-            //     }
-            // }
+            if (ComboMenu.GetBoolean("combo.useSpace") && MiscUtils.CanCast(AbilitySlot.Ability3))
+            {
+                if (LastAbilityFired == null && targetFish != null)
+                {
+                    LocalPlayer.PressAbility(AbilitySlot.Ability3, true);
+                    LocalPlayer.EditAimPosition = true;
+                    LocalPlayer.Aim(targetFish.Get<MapGameObject>().Position);
+                    return;
+                }
+            }
 
             // if (ComboMenu.GetBoolean("combo.useM2") && MiscUtils.CanCast(AbilitySlot.Ability2))
             // {
             //     if (LastAbilityFired == null && targetM2 != null)
-            //     {
+            //     {    
             //         var pred = TestPrediction.GetNormalLinePrediction(MyPos, targetM2, M2Range, M2Speed, M2Radius, true);
             //         if (pred.CanHit)
             //         {
@@ -511,6 +532,112 @@ namespace KVTemplate
             {
 
                 Drawing.DrawCircle(MyPos, M1Range, UnityEngine.Color.yellow);
+            }
+        }
+
+        private static void HealOthers()
+        {
+            var useM2 = HealMenu.GetBoolean("heal.useM2");
+            var useM2FullHP = HealMenu.GetBoolean("heal.useM2.fullHP");
+            var safeRange = HealMenu.GetSlider("heal.allySafeRange");
+            var M2safeRange = HealMenu.GetSlider("heal.useM2.safeRange");
+
+            var possibleAllies = EntitiesManager.LocalTeam.Where(x => !x.IsLocalPlayer && !x.Living.IsDead && !x.PhysicsCollision.IsImmaterial);
+
+            if (!useM2FullHP)
+            {
+                possibleAllies = possibleAllies.Where(x => x.Living.Health < (x.Living.MaxRecoveryHealth - (M2Heal / 2)));
+            }
+
+            var allyM2 = TargetSelector.GetTarget(possibleAllies, TargetingMode.NearMouse, M2Range);
+
+            var isCastingOrChanneling = HeroPlayer.AbilitySystem.IsCasting || HeroPlayer.IsChanneling;
+
+            if (isCastingOrChanneling && LastAbilityFired == null)
+            {
+                LastAbilityFired = CastingIndexToSlot(HeroPlayer.AbilitySystem.CastingAbilityIndex);
+            }
+
+            if (isCastingOrChanneling)
+            {
+                LocalPlayer.EditAimPosition = true;
+
+                switch (LastAbilityFired)
+                {
+                    case AbilitySlot.Ability2:
+                        if (allyM2 != null)
+                        {
+                            var pred = TestPrediction.GetNormalLinePrediction(MyPos, allyM2, M2Range, M2Speed, M2Radius, true);
+                            if (pred.CanHit)
+                            {
+                                LocalPlayer.Aim(pred.CastPosition);
+                            }
+                        }
+                        else
+                        {
+                            LocalPlayer.PressAbility(AbilitySlot.Interrupt, true);
+                        }
+                        break;
+                }
+            }
+            else
+            {
+                LocalPlayer.EditAimPosition = false;
+                LastAbilityFired = null;
+            }
+
+            if (useM2 && MiscUtils.CanCast(AbilitySlot.Ability2))
+            {
+                if (LastAbilityFired == null && allyM2 != null && (HeroPlayer.EnemiesAroundAlive(M2safeRange) < 1))
+                {
+                    var pred = TestPrediction.GetNormalLinePrediction(MyPos, allyM2, M2Range, M2Speed, M2Radius, true);
+                    if (pred.CanHit)
+                    {
+                        LocalPlayer.PressAbility(AbilitySlot.Ability2, true);
+                        LocalPlayer.EditAimPosition = true;
+                        LocalPlayer.Aim(pred.CastPosition);
+                    }
+                    return;
+                }
+            }
+        }
+
+        private static void HealSelf()
+        {
+            var useM2 = HealMenu.GetBoolean("heal.useM2");
+            var useM2FullHP = HealMenu.GetBoolean("heal.useM2.fullHP");
+            var M2safeRange = HealMenu.GetSlider("heal.useM2.safeRange");
+
+            var shouldM2 = useM2 && (useM2FullHP || HeroPlayer.Living.Health < (HeroPlayer.Living.MaxRecoveryHealth - (M2Heal / 2)));
+
+            var isCastingOrChanneling = HeroPlayer.AbilitySystem.IsCasting || HeroPlayer.IsChanneling;
+
+            if (isCastingOrChanneling && LastAbilityFired == null)
+            {
+                LastAbilityFired = CastingIndexToSlot(HeroPlayer.AbilitySystem.CastingAbilityIndex);
+            }
+
+            if (isCastingOrChanneling)
+            {
+                LocalPlayer.EditAimPosition = true;
+
+                switch (LastAbilityFired)
+                {
+                    case AbilitySlot.Ability2:
+                        LocalPlayer.Aim(HeroPlayer.MapObject.Position);
+                        break;
+                }
+            }
+            else
+            {
+                LocalPlayer.EditAimPosition = false;
+                LastAbilityFired = null;
+            }
+
+
+            if (shouldM2 && MiscUtils.CanCast(AbilitySlot.Ability2) && LastAbilityFired == null)
+            {
+                LocalPlayer.PressAbility(AbilitySlot.Ability2, true);
             }
         }
 

@@ -1,5 +1,0 @@
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVCroak\bin\Release\KVCroak.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVCroak\bin\Release\KVCroak.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVCroak\obj\Release\KVCroak.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVCroak\obj\Release\KVCroak.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVCroak\obj\Release\KVCroak.csprojResolveAssemblyReference.cache

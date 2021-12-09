@@ -1,5 +1,0 @@
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipPearl\bin\Release\PipPearl.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipPearl\bin\Release\PipPearl.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipPearl\obj\Release\PipPearl.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipPearl\obj\Release\PipPearl.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipPearl\obj\Release\PipPearl.csprojResolveAssemblyReference.cache

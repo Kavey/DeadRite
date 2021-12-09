@@ -1,5 +1,0 @@
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipFreya\bin\Release\PipFreya.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipFreya\bin\Release\PipFreya.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipFreya\obj\Release\PipFreya.csprojResolveAssemblyReference.cache
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipFreya\obj\Release\PipFreya.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipFreya\obj\Release\PipFreya.pdb

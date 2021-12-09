@@ -23,21 +23,21 @@ using PipLibrary.Utils;
 
 using TestPrediction2NS;
 
-namespace KVTemplate
+namespace KVCroak
 {
-    public class KVTemplate : IAddon
+    public class KVCroak : IAddon
     {
         private static Menu HeroMenu;
         private static Menu KeysMenu, ComboMenu, HealMenu, DrawingsMenu, MiscMenu;
 
         private static Character HeroPlayer => LocalPlayer.Instance;
-        private static readonly string HeroName = "Template";
+        private static readonly string HeroName = "Croak";
         private static Vector2 MyPos => HeroPlayer.MapObject.Position;
 
         private static AbilitySlot? LastAbilityFired = null;
-
+        
         //Range
-        private const float M1Range = 10f;
+        private const float M1Range = 2.5f;
         // private const float M2Range = 0.0f;
         // private const float SpaceRange = 0.0f;
         // private const float QRange = 0.0f;
@@ -47,19 +47,8 @@ namespace KVTemplate
         // private const float EX1Range = 0.0f;
         // private const float EX2Range = 0.0f;
 
-        //Speed
-        private const float M1Speed = 9f;
-        // private const float M2Speed = 0.0f;
-        // private const float SpaceSpeed = 0.0f;
-        // private const float QSpeed = 0.0f;
-        // private const float ESpeed = 0.0f;
-        // private const float RSpeed = 0.0f;
-        // private const float FSpeed = 0.0f;
-        // private const float EX1Speed = 0.0f;
-        // private const float EX2Speed = 0.0f;
-
         //Radius
-        private const float M1Radius = 0.6f;
+        // private const float M1Radius = 0.6f;
         // private const float M2Radius = 0.0f;
         // private const float SpaceRadius = 0.0f;
         // private const float QRadius = 0.0f;
@@ -69,6 +58,17 @@ namespace KVTemplate
         // private const float EX1Radius = 0.0f;
         // private const float EX2Radius = 0.0f;
         //
+
+        //Speed
+        // private const float M1Speed = 9f;
+        // private const float M2Speed = 0.0f;
+        // private const float SpaceSpeed = 0.0f;
+        // private const float QSpeed = 0.0f;
+        // private const float ESpeed = 0.0f;
+        // private const float RSpeed = 0.0f;
+        // private const float FSpeed = 0.0f;
+        // private const float EX1Speed = 0.0f;
+        // private const float EX2Speed = 0.0f;
 
         //AirTime
         // private const float M1AirTime = 0.0f;
@@ -124,7 +124,7 @@ namespace KVTemplate
 
         private static void InitMenu()
         {
-            HeroMenu = new Menu("templatemenu", "Kavey's Taya!");
+            HeroMenu = new Menu("templatemenu", "Kavey's Croak!");
 
             KeysMenu = new Menu("keysmenu", "Keys", true);
             KeysMenu.Add(new MenuKeybind("keys.combo", "Combo Key", UnityEngine.KeyCode.Mouse0));
@@ -258,7 +258,7 @@ namespace KVTemplate
             // var safeRange = ComboMenu.GetSlider("combo.useX.safeRange");
             // if (HeroPlayer.EnemiesAroundAlive(safeRange) > 0)
             //
-
+            
             var isCastingOrChanneling = HeroPlayer.AbilitySystem.IsCasting || HeroPlayer.IsChanneling;
 
             if (isCastingOrChanneling && LastAbilityFired == null)
@@ -277,7 +277,7 @@ namespace KVTemplate
 
                     // case AbilitySlot.EXAbility2:
                     //     break;
-
+                    
                     // case AbilitySlot.EXAbility1:
                     //     break;
 
@@ -297,13 +297,9 @@ namespace KVTemplate
                     //     break;
 
                     case AbilitySlot.Ability1:
-                        if (targetM1 != null)
+                        if (LastAbilityFired == null && targetM1 != null)
                         {
-                            var pred = TestPrediction.GetNormalLinePrediction(MyPos, targetM1, M1Range, M1Speed, M1Radius, true);
-                            if (pred.CanHit)
-                            {
-                                LocalPlayer.Aim(pred.CastPosition);
-                            }
+                            LocalPlayer.Aim(targetM1.MapObject.Position);
                         }
                         else
                         {
@@ -450,14 +446,7 @@ namespace KVTemplate
             {
                 if (LastAbilityFired == null && targetM1 != null)
                 {
-                    var pred = TestPrediction.GetNormalLinePrediction(MyPos, targetM1, M1Range, M1Speed, M1Radius, true);
-                    if (pred.CanHit)
-                    {
-                        LocalPlayer.PressAbility(AbilitySlot.Ability1, true);
-                        LocalPlayer.EditAimPosition = true;
-                        LocalPlayer.Aim(pred.CastPosition);
-                        return;
-                    }
+                    LocalPlayer.PressAbility(AbilitySlot.Ability1, true);
                 }
             }
         }

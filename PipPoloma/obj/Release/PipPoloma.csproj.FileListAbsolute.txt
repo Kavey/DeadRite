@@ -1,5 +1,0 @@
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipPoloma\bin\Release\PipPoloma.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipPoloma\bin\Release\PipPoloma.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipPoloma\obj\Release\PipPoloma.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipPoloma\obj\Release\PipPoloma.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipPoloma\obj\Release\PipPoloma.csprojResolveAssemblyReference.cache

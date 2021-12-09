@@ -1,0 +1,8 @@
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipTemplate\bin\Release\KVTemplate.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipTemplate\bin\Release\KVTemplate.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipTemplate\obj\Release\KVTemplate.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipTemplate\obj\Release\KVTemplate.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVTemplate\bin\Release\KVTemplate.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVTemplate\bin\Release\KVTemplate.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVTemplate\obj\Release\KVTemplate.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVTemplate\obj\Release\KVTemplate.pdb

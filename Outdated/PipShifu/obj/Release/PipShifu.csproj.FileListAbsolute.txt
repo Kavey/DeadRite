@@ -1,0 +1,5 @@
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipShifu\bin\Release\PipShifu.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipShifu\bin\Release\PipShifu.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipShifu\obj\Release\PipShifu.dll
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipShifu\obj\Release\PipShifu.pdb
+C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\PipShifu\obj\Release\PipShifu.csprojResolveAssemblyReference.cache

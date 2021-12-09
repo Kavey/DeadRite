@@ -1,5 +1,0 @@
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVPearl\bin\Release\KVPearl.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVPearl\bin\Release\KVPearl.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVPearl\obj\Release\KVPearl.dll
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVPearl\obj\Release\KVPearl.pdb
-C:\Users\Shadow\Desktop\Shadow\BRiteProfiles\KVPearl\obj\Release\KVPearl.csprojResolveAssemblyReference.cache
